@@ -1,0 +1,36 @@
+body{
+    background-image: url(Files/a765c3f24f6fa56d9ca285bc84e292cb.gif);
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
+
+.container{
+    max-width: 640px;
+    margin: 0 auto;
+    background-color:#ffff;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    margin: 350px auto;
+    padding-bottom: 20px;
+}
+
+button{
+    border: none;
+    font-weight: 700;
+    height: 50px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(17, 86, 102);
+    color: #ffff;
+
+}
+
+button:hover{
+    background-color: rgb(9, 48, 56);
+}
+
+button :active{
+    background-color: rgb(9, 48, 56);;
+}
