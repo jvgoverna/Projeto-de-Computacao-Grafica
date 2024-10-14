@@ -8,17 +8,24 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setAnimationLoop( animate );
 document.body.appendChild( renderer.domElement );
 
+camera.position.z = 5;
+
 const geometry = new THREE.SphereGeometry( 0.5, 32, 32 ); //define os pontos da primitiva
 
 const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); //cor da primitiva
+const createSun = ( geometry,material ) => {
+	const container = document.querySelector(".container");
+	const sphere = new THREE.Mesh( geometry,material );
+	sphere.position.x = 0;
 
-const sphere = new THREE.Mesh( geometry, material ); //cria a primitiva
-sphere.position.x = -6;
+	const tag = document.createElement("button");
+	tag.setAttribute("class","sun");
+	container.appendChild(tag);
 
-
-scene.add( sphere );
-
-camera.position.z = 5;
+	return sphere;
+}
+const sun = createSun(geometry,material);
+scene.add( sun );
 
 function animate() {
 	renderer.render( scene, camera );
@@ -26,3 +33,4 @@ function animate() {
 }
 
 //para rodar utilize npm run dev
+//Zoom deve ser 110

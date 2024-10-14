@@ -1,3 +1,22 @@
 body{
     background-color: #000;
 }
+
+.sun{
+    width: 110px;
+    height: 110px;
+    border-radius: 50%; /* Torna o botão circular */
+    border-color: white;
+    border-width: 5px;
+    border-style: solid;
+    background-color: transparent;
+    cursor: pointer;
+    position: absolute;/* Outros elementos na página não se movem p/ acomodá-lo */
+    top: 45.2%;
+    left: 47.6%;
+    transition: 0.5s;
+}
+
+.sun:hover{
+    background-color: #000;
+}
