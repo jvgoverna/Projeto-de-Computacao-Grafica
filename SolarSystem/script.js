@@ -17,11 +17,14 @@ const createSun = ( geometry,material ) => {
 	const container = document.querySelector(".container");
 	const sphere = new THREE.Mesh( geometry,material );
 	sphere.position.x = 0;
+	sphere.scale.y = 2;
+	sphere.scale.x = 2;
 
 	const tag = document.createElement("button");
 	tag.setAttribute("class","sun");
 	container.appendChild(tag);
 
+	console.log(sphere);
 	return sphere;
 }
 const sun = createSun(geometry,material);
