@@ -13,23 +13,56 @@ camera.position.z = 5;
 const geometry = new THREE.SphereGeometry( 0.5, 32, 32 ); //define os pontos da primitiva
 
 const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); //cor da primitiva
+const container = document.querySelector(".container");
+
+
 const createSun = ( geometry,material ) => {
-	const container = document.querySelector(".container");
 	const sphere = new THREE.Mesh( geometry,material );
 	sphere.position.x = 0;
-
-	const tag = document.createElement("button");
-	tag.setAttribute("class","sun");
-	container.appendChild(tag);
-
+	sphere.scale.y = 2;
+	sphere.scale.x = 2;
 	return sphere;
 }
 const sun = createSun(geometry,material);
 scene.add( sun );
 
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+
+const calculatePointerMovementMouse = (ev) => {
+	pointer.x = (ev.clientX / window.innerWidth) * 2 - 1; // da esquerda p/ direita (-1 a 1)
+	pointer.y = -(ev.clientY / window.innerHeight) * 2 + 1; //de cima para baixo (-1 a 1)
+	raycaster.setFromCamera( pointer , camera );
+}
+
+window.addEventListener("mousemove" , (ev) => {
+	calculatePointerMovementMouse(ev);
+
+	//ao traçar o raio da camera ao objeto e detectar uma "colisão" intersects retorna uma lista de objetos encontrados
+	const intersects = raycaster.intersectObjects( scene.children );
+
+	if(intersects.length > 0){
+		document.body.style.cursor = 'pointer';
+		const tag = document.createElement("button");
+		
+		sun.material.color.set( 0xff0000 );
+	}else{
+		document.body.style.cursor = 'default';
+		sun.material.color.set( 0xffff00 );
+	}
+
+	console.log(intersects);
+})
+
+
+window.addEventListener( "resize", () => {
+    camera.aspect = innerWidth/innerHeight;
+    camera.updateProjectionMatrix( );
+    renderer.setSize( innerWidth, innerHeight );
+});
+
 function animate() {
 	renderer.render( scene, camera );
-
 }
 
 //para rodar utilize npm run dev
