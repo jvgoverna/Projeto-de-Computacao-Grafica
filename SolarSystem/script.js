@@ -8,23 +8,39 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setAnimationLoop( animate );
 document.body.appendChild( renderer.domElement );
 
+
+const sphere = {
+	Sun : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 0xffff00} ),
+		posX : -4.3,
+		scaleX : 2,
+		scaleY : 2
+	},
+	Mercury : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 0xff0000 } ),
+		posX : 2,
+		scaleX : 1,
+		scaleY : 1
+	}
+}
+
+const createSolarSystem = (sphere) => {
+	let solarSystem;
+	
+	for( let keys in sphere ){
+		solarSystem = new THREE.Mesh( sphere[keys]['geometry'] , sphere[keys]['material'] );
+		solarSystem.position.x = sphere[keys]['posX'];
+		solarSystem.scale.x = sphere[keys]['scaleX'];
+		solarSystem.scale.y = sphere[keys]['scaleY'];
+
+		scene.add( solarSystem);
+	}
+}
+createSolarSystem(sphere);
 camera.position.z = 5;
 
-const geometry = new THREE.SphereGeometry( 0.5, 32, 32 ); //define os pontos da primitiva
-
-const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); //cor da primitiva
-const container = document.querySelector(".container");
-
-
-const createSun = ( geometry,material ) => {
-	const sphere = new THREE.Mesh( geometry,material );
-	sphere.position.x = 0;
-	sphere.scale.y = 2;
-	sphere.scale.x = 2;
-	return sphere;
-}
-const sun = createSun(geometry,material);
-scene.add( sun );
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
@@ -43,15 +59,11 @@ window.addEventListener("mousemove" , (ev) => {
 
 	if(intersects.length > 0){
 		document.body.style.cursor = 'pointer';
-		const tag = document.createElement("button");
-		
-		sun.material.color.set( 0xff0000 );
 	}else{
 		document.body.style.cursor = 'default';
-		sun.material.color.set( 0xffff00 );
 	}
 
-	console.log(intersects);
+	//console.log(intersects);
 })
 
 
@@ -66,4 +78,3 @@ function animate() {
 }
 
 //para rodar utilize npm run dev
-//Zoom deve ser 110
