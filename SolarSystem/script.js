@@ -30,7 +30,7 @@ const sphere = {
 	Venus : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
-		posX : 5.2,
+		posX : 5,
 		scaleX : 1.5,
 		scaleY : 1.5,
 		name : 'Venus'
@@ -87,18 +87,19 @@ const clickObject = () => {
 
 
 					if(camera.position.x > posX) {
-						camera.position.x -= 0.2;
+						camera.position.x = parseFloat((camera.position.x - 0.2).toFixed(2)); 
 					}
 					if(camera.position.z > 2){
-						camera.position.z -= 0.2;
+						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
 					}
 
 				}else{
 					if(camera.position.x < posX) {
-						camera.position.x += 0.2;
+						//toFixed retorna uma string ao invés de um número, convertendo para número com parseFloat
+						camera.position.x = parseFloat((camera.position.x + 0.2).toFixed(2)); 
 					}
 					if(camera.position.z > 2){
-						camera.position.z -= 0.2;
+						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
 					}
 				}
 				requestAnimationFrame(clickObject);
@@ -108,23 +109,44 @@ const clickObject = () => {
 	}
 }
 
+const returningToTheOriginalCameraPositioning = () => {
+	console.log("CLIQUEI");
+
+
+	if(camera.position.x > 0 ){
+		camera.position.x = parseFloat((camera.position.x - 0.20).toFixed(2));
+	}
+
+	else if (camera.position.z < 5.00){
+		camera.position.z = parseFloat((camera.position.z + 0.20).toFixed(2));
+	}
+
+	console.log(camera.position.x, camera.position.z);
+
+	
+	requestAnimationFrame(returningToTheOriginalCameraPositioning);
+}
+
 window.addEventListener("click" , (ev) => {
 	calculatePointerMovementMouse(ev);
-	let backButton = document.querySelector(".backButton");
 	const intersects = raycaster.intersectObjects( scene.children );
+
+	let backButton = document.querySelector(".backButton");
     // Só cria o botão se ele ainda não existir
     if (!backButton) {
-		
-		if(intersects.length > 0){
+
+		if(intersects.length > 0){ //clique em algum objeto
 			backButton = document.createElement("button");
 			backButton.setAttribute("class", "backButton");
 			container.appendChild(backButton);
 
+			backButton.onclick = () =>{
+				container.removeChild(backButton);
+				returningToTheOriginalCameraPositioning();
+			};
 		}
     }
-
 	clickObject();
-	
 })
 
 window.addEventListener( "resize", () => {
