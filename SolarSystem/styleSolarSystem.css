@@ -3,21 +3,42 @@ body{
     overflow: hidden;
 }
 
-.sun{
-    width: 110px;
-    height: 110px;
-    border-radius: 50%; /* Torna o botão circular */
-    border-color: white;
-    border-width: 5px;
-    border-style: solid;
-    background-color: transparent;
+@keyframes pulse {
+    0%{
+        transform: scale(1);
+    }
+    
+    50%{
+        transform: scale(1.5); /* 150% do tamanho original*/
+    }
+
+    100%{
+        transform: scale(1);
+    }
+}
+.clickPlanets{
+    color: gray;
+    text-align: center;
+    font-size: 15px;
+    animation: pulse 3s ease-in-out infinite;
+    padding-top: 30px;
+}
+
+#test{
+    background-color: white;
+    border-radius: 50%;
+}
+
+.backButton{
+    width: 100px; 
+    height: 100px; 
+    background-image: url('../Files/back.png');
+    background-size: cover; /* ajusta a imagem ao tamanho do botão */
+    border-radius: 80%;
     cursor: pointer;
-    position: absolute;/* Outros elementos na página não se movem p/ acomodá-lo */
-    top: 45.2%;
-    left: 47.6%;
     transition: 0.5s;
 }
 
-.sun:hover{
-    background-color: #000;
+.backButton:hover{
+    background-color: gray;
 }

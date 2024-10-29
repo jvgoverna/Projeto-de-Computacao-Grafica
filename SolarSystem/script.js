@@ -8,29 +8,43 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setAnimationLoop( animate );
 document.body.appendChild( renderer.domElement );
 
-
+let container = document.querySelector(".container");
 const sphere = {
 	Sun : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 0xffff00} ),
 		posX : -4,
-		scaleX : 2,
-		scaleY : 2,
+		scaleX : 4,
+		scaleY : 4,
 		name : 'Sun',
 	},
 	Mercury : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 0xff0000 } ),
-		posX : 2,
-		scaleX : 1,
-		scaleY : 1,
+		posX : 1,
+		scaleX : 2,
+		scaleY : 2,
 		name : 'Mercury'
+	},
+
+	Venus : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
+		posX : 5.2,
+		scaleX : 1.5,
+		scaleY : 1.5,
+		name : 'Venus'
 	}
 }
 
 const createSolarSystem = (sphere) => {
 	let solarSystem;
-	
+
+	const textTag = document.createElement("p");
+	textTag.setAttribute("class", "clickPlanets");
+	textTag.innerHTML = `Clique em algum planeta ou no sol para visualizar mais detalhes`;
+	container.appendChild(textTag);
+
 	for( let keys in sphere ){
 		solarSystem = new THREE.Mesh( sphere[keys]['geometry'] , sphere[keys]['material'] );
 		solarSystem.position.x = sphere[keys]['posX'];
@@ -55,24 +69,22 @@ const calculatePointerMovementMouse = (ev) => {
 }
 
 const clickObject = () => {
-	const intersects = raycaster.intersectObjects( scene.children );
 
+	const intersects = raycaster.intersectObjects( scene.children );
+	
 	
 	const container = document.querySelector('.container');
 	
 	for( let keys in sphere ){
 		let name = sphere[keys]['name'];
-		
 		if (intersects.length > 0){
 			const clickedObject = intersects[0].object;
 			if(clickedObject.name === name){
-				console.log(name);
-				// const backButton = document.createElement('button');
-				// backButton.setAttribute("class","backButton");
-				// container.appendChild( backButton );
+				console.log(camera.position.x , camera.position.z);
 				const posX = sphere[keys]['posX'];
-
+				
 				if (clickedObject.name === "Sun"){
+
 
 					if(camera.position.x > posX) {
 						camera.position.x -= 0.2;
@@ -81,37 +93,42 @@ const clickObject = () => {
 						camera.position.z -= 0.2;
 					}
 
-					requestAnimationFrame(clickObject);
+				}else{
+					if(camera.position.x < posX) {
+						camera.position.x += 0.2;
+					}
+					if(camera.position.z > 2){
+						camera.position.z -= 0.2;
+					}
 				}
+				requestAnimationFrame(clickObject);
 				
 			}
-		}
-		else{
-			console.log("Nenhum Objeto selecionado");
 		}
 	}
 }
 
-window.addEventListener("mousemove" , (ev) => {
+window.addEventListener("click" , (ev) => {
 	calculatePointerMovementMouse(ev);
-	
-	//ao traçar o raio da camera ao objeto e detectar uma "colisão" intersects retorna uma lista de objetos encontrados
+	let backButton = document.querySelector(".backButton");
 	const intersects = raycaster.intersectObjects( scene.children );
+    // Só cria o botão se ele ainda não existir
+    if (!backButton) {
+		
+		if(intersects.length > 0){
+			backButton = document.createElement("button");
+			backButton.setAttribute("class", "backButton");
+			container.appendChild(backButton);
+
+		}
+    }
+
+	clickObject();
 	
-	if(intersects.length > 0){
-		document.body.style.cursor = 'pointer';
-	}else{
-		document.body.style.cursor = 'default';
-	}
-	
-	//console.log(intersects);
 })
 
-
-window.addEventListener('click' , clickObject);
-
 window.addEventListener( "resize", () => {
-    camera.aspect = innerWidth/innerHeight;
+	camera.aspect = innerWidth/innerHeight;
     camera.updateProjectionMatrix( );
     renderer.setSize( innerWidth, innerHeight );
 });
