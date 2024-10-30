@@ -17,6 +17,7 @@ const sphere = {
 		scaleX : 3,
 		scaleY : 3,
 		name : 'Sun',
+		texture : '../Files/sol.jpg'
 	},
 	Mercury : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
@@ -24,7 +25,8 @@ const sphere = {
 		posX : 1,
 		scaleX : 2,
 		scaleY : 2,
-		name : 'Mercury'
+		name : 'Mercury',
+		texture : '../Files/mercurio.jpg'
 	},
 
 	Venus : {
@@ -33,24 +35,36 @@ const sphere = {
 		posX : 5,
 		scaleX : 1.5,
 		scaleY : 1.5,
-		name : 'Venus'
+		name : 'Venus',
+		texture : '../Files/venus.jpg'
 	}
 }
 
 
 const createSolarSystem = (sphere) => {
 	let solarSystem;
+	let textureLoader;
+	let texture;
+	let textureMaterial;
 	const textTag = document.createElement("p");
 	textTag.setAttribute("class", "clickPlanets");
 	textTag.innerHTML = `Clique em algum planeta ou no sol para visualizar mais detalhes`;
 	container.appendChild(textTag);
 
 	for( let keys in sphere ){
-		solarSystem = new THREE.Mesh( sphere[keys]['geometry'] , sphere[keys]['material'] );
+		textureLoader = new THREE.TextureLoader();
+		texture = textureLoader.load(sphere[keys]['texture']);
+		textureMaterial = new THREE.MeshBasicMaterial( { map: texture } );
+
+		solarSystem = new THREE.Mesh( sphere[keys]['geometry'] ,textureMaterial );
 		solarSystem.position.x = sphere[keys]['posX'];
 		solarSystem.scale.x = sphere[keys]['scaleX'];
 		solarSystem.scale.y = sphere[keys]['scaleY'];
 		solarSystem.name = sphere[keys]['name'];
+
+		
+
+
 		scene.add( solarSystem);
 	}
 }
