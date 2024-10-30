@@ -13,9 +13,9 @@ const sphere = {
 	Sun : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 0xffff00} ),
-		posX : -4,
-		scaleX : 4,
-		scaleY : 4,
+		posX : -5.4,
+		scaleX : 3,
+		scaleY : 3,
 		name : 'Sun',
 	},
 	Mercury : {
@@ -37,9 +37,9 @@ const sphere = {
 	}
 }
 
+
 const createSolarSystem = (sphere) => {
 	let solarSystem;
-
 	const textTag = document.createElement("p");
 	textTag.setAttribute("class", "clickPlanets");
 	textTag.innerHTML = `Clique em algum planeta ou no sol para visualizar mais detalhes`;
@@ -68,69 +68,99 @@ const calculatePointerMovementMouse = (ev) => {
 	raycaster.setFromCamera( pointer , camera );
 }
 
-const clickObject = () => {
+let animation = false;
 
+const clickObject = () => {
 	const intersects = raycaster.intersectObjects( scene.children );
-	
-	
-	const container = document.querySelector('.container');
-	
-	for( let keys in sphere ){
-		let name = sphere[keys]['name'];
-		if (intersects.length > 0){
+
+	if(animation && intersects.length > 0){
+
+		for(let keys in sphere){
+			let name = sphere[keys]['name'];
 			const clickedObject = intersects[0].object;
+				
 			if(clickedObject.name === name){
 				console.log(camera.position.x , camera.position.z);
-				const posX = sphere[keys]['posX'];
-				
-				if (clickedObject.name === "Sun"){
+				let posX = sphere[keys]["posX"];
 
+				if(clickedObject.name === "Sun"){
 
-					if(camera.position.x > posX) {
-						camera.position.x = parseFloat((camera.position.x - 0.2).toFixed(2)); 
+					if(camera.position.x > posX){
+						camera.position.x = parseFloat((camera.position.x - 0.2).toFixed(2));
+					}else{
+						animation = false;
 					}
+
 					if(camera.position.z > 2){
 						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
 					}
 
 				}else{
-					if(camera.position.x < posX) {
-						//toFixed retorna uma string ao invés de um número, convertendo para número com parseFloat
-						camera.position.x = parseFloat((camera.position.x + 0.2).toFixed(2)); 
+					if(posX > 2){
+						if(camera.position.x < posX){
+							camera.position.x = parseFloat((camera.position.x + 0.2).toFixed(2));
+						}else{
+							animation = false;
+						}
+
+						if(camera.position.z > 2){
+							camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
+						}
+					}else{
+						if(camera.position.x < posX){
+							camera.position.x = parseFloat((camera.position.x + 0.2).toFixed(2));
+						}
+
+						if(camera.position.z > 2){
+							camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
+						}else{
+							animation = false;
+						}
 					}
-					if(camera.position.z > 2){
-						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
-					}
+
 				}
-				requestAnimationFrame(clickObject);
-				
 			}
 		}
+		console.log(animation);
+		requestAnimationFrame(clickObject);
 	}
 }
 
+const startAnimation = () => {
+	animation = true;
+	requestAnimationFrame(clickObject);
+}
+
+let backAnimation = false;
 const returningToTheOriginalCameraPositioning = () => {
-	console.log("CLIQUEI");
+	if(backAnimation){
 
-
-	if(camera.position.x > 0 ){
-		camera.position.x = parseFloat((camera.position.x - 0.20).toFixed(2));
+		console.log("CLIQUEI");
+		
+		
+		if(camera.position.x > 0 ){
+			camera.position.x = parseFloat((camera.position.x - 0.20).toFixed(2));
+		}else if(camera.position.x < 0){
+			camera.position.x = parseFloat((camera.position.x + 0.20).toFixed(2));
+		}else{
+			backAnimation = false;
+		}
+		if (camera.position.z < 5.00){
+			camera.position.z = parseFloat((camera.position.z + 0.20).toFixed(2));
+		}
+		requestAnimationFrame(returningToTheOriginalCameraPositioning)
+		console.log(camera.position.x, camera.position.z);
 	}
+}
 
-	else if (camera.position.z < 5.00){
-		camera.position.z = parseFloat((camera.position.z + 0.20).toFixed(2));
-	}
-
-	console.log(camera.position.x, camera.position.z);
-
-	
+const returningToOriginalPosition = () => {
+	backAnimation = true;
 	requestAnimationFrame(returningToTheOriginalCameraPositioning);
 }
 
 window.addEventListener("click" , (ev) => {
 	calculatePointerMovementMouse(ev);
 	const intersects = raycaster.intersectObjects( scene.children );
-
 	let backButton = document.querySelector(".backButton");
     // Só cria o botão se ele ainda não existir
     if (!backButton) {
@@ -140,13 +170,14 @@ window.addEventListener("click" , (ev) => {
 			backButton.setAttribute("class", "backButton");
 			container.appendChild(backButton);
 
-			backButton.onclick = () =>{
+			backButton.addEventListener("click" , () => {
 				container.removeChild(backButton);
-				returningToTheOriginalCameraPositioning();
-			};
+				returningToOriginalPosition();
+			})
 		}
     }
-	clickObject();
+
+	startAnimation();
 })
 
 window.addEventListener( "resize", () => {
