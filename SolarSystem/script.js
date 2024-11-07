@@ -9,6 +9,8 @@ renderer.setAnimationLoop( animate );
 document.body.appendChild( renderer.domElement );
 
 let container = document.querySelector(".container");
+let simulationButton = document.querySelector(".simulationButton");
+
 const sphere = {
 	Sun : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
@@ -72,6 +74,38 @@ const createSolarSystem = (sphere) => {
 createSolarSystem(sphere);
 camera.position.z = 5;
 
+const simulationSphere = {
+	Sun : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 0xffff00} ),
+		posX : 0,
+		scaleX : 3,
+		scaleY : 3,
+		name : 'Sun',
+		texture : '../Files/sol.jpg'
+	},
+}
+
+const createSimulationSolarSystem = (simulationSphere) => {
+	let solarSystem;
+	let textureLoader;
+	let texture;
+	let textureMaterial;
+
+	for( let keys in simulationSphere ){
+		textureLoader = new THREE.TextureLoader();
+		texture = textureLoader.load(simulationSphere[keys]['texture']);
+		textureMaterial = new THREE.MeshBasicMaterial( { map: texture } );
+
+		solarSystem = new THREE.Mesh( simulationSphere[keys]['geometry'] ,textureMaterial );
+		solarSystem.position.x = simulationSphere[keys]['posX'];
+		solarSystem.scale.x = simulationSphere[keys]['scaleX'];
+		solarSystem.scale.y = simulationSphere[keys]['scaleY'];
+		solarSystem.name = simulationSphere[keys]['name'];
+
+		scene.add( solarSystem);
+	}
+}
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
@@ -167,9 +201,42 @@ const returningToTheOriginalCameraPositioning = () => {
 	}
 }
 
-const returningToOriginalPosition = () => {
+const returningPosition = () => {
 	backAnimation = true;
 	requestAnimationFrame(returningToTheOriginalCameraPositioning);
+}
+
+let simulationAnimate = false;
+
+const cameraSimulation = () => {
+	if(simulationAnimate){
+		if(!simulationButtonClicked){
+			console.log("Alternando posição para a simulacao");
+			if(camera.position.z < 20.00){
+				camera.position.z = parseFloat( (camera.position.z + 0.10).toFixed(2) );
+				requestAnimationFrame(cameraSimulation);
+			}else{
+				simulationAnimate = false;
+			}
+			console.log(simulationAnimate);
+		}
+		else{
+			console.log("Voltando para a posição original da camera");
+			if(camera.position.z > 5.00){
+				camera.position.z = parseFloat( (camera.position.z - 0.10).toFixed(2) );
+				requestAnimationFrame(cameraSimulation);
+			}else{
+				simulationAnimate = false;
+			}
+		}
+	}
+	console.log(`Camera X: ${camera.position.x} Camera Z: ${camera.position.z}`);
+	
+}
+
+const positioningSimulationCamera = () => {
+	simulationAnimate = true;
+	requestAnimationFrame(cameraSimulation);
 }
 
 window.addEventListener("click" , (ev) => {
@@ -186,7 +253,7 @@ window.addEventListener("click" , (ev) => {
 
 			backButton.addEventListener("click" , () => {
 				container.removeChild(backButton);
-				returningToOriginalPosition();
+				returningPosition();
 			})
 		}
     }
@@ -199,6 +266,29 @@ window.addEventListener( "resize", () => {
     camera.updateProjectionMatrix( );
     renderer.setSize( innerWidth, innerHeight );
 });
+
+let simulationButtonClicked = true;
+
+simulationButton.addEventListener( "click" , () =>{
+	if(simulationButtonClicked){
+		container.removeChild(document.querySelector(".clickPlanets"));
+		for(let keys in sphere){
+			scene.remove(scene.getObjectByName(sphere[keys]['name']));
+		}
+		createSimulationSolarSystem(simulationSphere);
+		simulationButton.innerText = "Detalhes do Sistema Solar";
+		simulationButtonClicked = false;
+	}
+	else if(!simulationButtonClicked){
+		for(let keys in simulationSphere){
+			scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
+		}
+		createSolarSystem(sphere); // PRECISA Aplicar escala no sol
+		simulationButtonClicked = true;
+		simulationButton.innerText = "Simular Sistema Solar";
+	}
+	positioningSimulationCamera();
+})
 
 function animate() {
 	renderer.render( scene, camera );

@@ -42,3 +42,22 @@ body{
 .backButton:hover{
     background-color: gray;
 }
+
+
+.simulationButton{
+    border: none;
+    font-weight: 700;
+    height: 50px;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgb(17, 86, 102);
+    color: #ffff;
+    position: absolute;
+    margin-top: 44%;
+    margin-left: 88%;
+    transition: 0.3s;
+}
+
+.simulationButton:hover{
+    background-color: gray;
+}
