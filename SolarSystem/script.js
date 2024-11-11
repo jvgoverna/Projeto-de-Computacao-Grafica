@@ -18,7 +18,7 @@ const sphere = {
 		posX : -5.4,
 		scaleX : 3,
 		scaleY : 3,
-		name : 'Sun',
+		name : 'Sol',
 		texture : '../Files/sol.jpg'
 	},
 	Mercury : {
@@ -27,7 +27,7 @@ const sphere = {
 		posX : 1,
 		scaleX : 2,
 		scaleY : 2,
-		name : 'Mercury',
+		name : 'Mercúrio',
 		texture : '../Files/mercurio.jpg'
 	},
 
@@ -37,7 +37,7 @@ const sphere = {
 		posX : 5,
 		scaleX : 1.5,
 		scaleY : 1.5,
-		name : 'Venus',
+		name : 'Vênus',
 		texture : '../Files/venus.jpg'
 	}
 }
@@ -78,7 +78,7 @@ const simulationSphere = {
 	Sun : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 0xffff00} ),
-		posX : 0,
+		posZ : 1,
 		scaleX : 3,
 		scaleY : 3,
 		name : 'Sun',
@@ -98,7 +98,7 @@ const createSimulationSolarSystem = (simulationSphere) => {
 		textureMaterial = new THREE.MeshBasicMaterial( { map: texture } );
 
 		solarSystem = new THREE.Mesh( simulationSphere[keys]['geometry'] ,textureMaterial );
-		solarSystem.position.x = simulationSphere[keys]['posX'];
+		solarSystem.position.z = simulationSphere[keys]['posZ'];
 		solarSystem.scale.x = simulationSphere[keys]['scaleX'];
 		solarSystem.scale.y = simulationSphere[keys]['scaleY'];
 		solarSystem.name = simulationSphere[keys]['name'];
@@ -131,7 +131,7 @@ const clickObject = () => {
 				console.log(camera.position.x , camera.position.z);
 				let posX = sphere[keys]["posX"];
 
-				if(clickedObject.name === "Sun"){
+				if(clickedObject.name === "Sol"){
 
 					if(camera.position.x > posX){
 						camera.position.x = parseFloat((camera.position.x - 0.2).toFixed(2));
@@ -239,19 +239,68 @@ const positioningSimulationCamera = () => {
 	requestAnimationFrame(cameraSimulation);
 }
 
+
+let direction = false;
+const scale = (simulationSphere) => {
+	let factor = 1.10;
+	let posZ;
+
+	if(direction && !simulationAnimate){
+		for(let keys in simulationSphere){
+			posZ = simulationSphere[keys]['posZ'];
+			let textureLoader = new THREE.TextureLoader();
+			let texture = textureLoader.load(simulationSphere[keys]['texture']);
+			let textureMaterial = new THREE.MeshBasicMaterial( { map: texture } );
+			
+			let solarSystem = new THREE.Mesh( simulationSphere[keys]['geometry'] ,textureMaterial );
+			
+			if(posZ < 15){
+				let newZ = parseFloat(posZ * factor).toFixed(2);
+				
+				simulationSphere[keys]['posZ'] = newZ;
+				solarSystem.position.z = simulationSphere[keys]['posZ'];
+				
+				
+				scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
+				scene.add(solarSystem);
+
+				
+
+				// let idSolaSystem = [...solarSystem.id.toString()];				
+				// console.log(idSolaSystem);
+				
+			}else{
+				direction = false;
+			}
+			console.log(`posZ : ${simulationSphere[keys]['posZ']}`);
+		}
+	}
+	requestAnimationFrame( () => scale(simulationSphere) );
+
+	
+}
+
+const scaleAnimation = () => {
+	direction = true;
+	requestAnimationFrame( () => scale(simulationSphere) );
+}
+
 window.addEventListener("click" , (ev) => {
 	calculatePointerMovementMouse(ev);
 	const intersects = raycaster.intersectObjects( scene.children );
 	let backButton = document.querySelector(".backButton");
+	let objectName = document.querySelector(".clickPlanets");
     // Só cria o botão se ele ainda não existir
     if (!backButton) {
 
 		if(intersects.length > 0){ //clique em algum objeto
+			objectName.innerText = `${intersects[0].object.name}`;
 			backButton = document.createElement("button");
 			backButton.setAttribute("class", "backButton");
 			container.appendChild(backButton);
 
 			backButton.addEventListener("click" , () => {
+				objectName.innerHTML = `Clique em algum planeta ou no sol para visualizar mais detalhes`;
 				container.removeChild(backButton);
 				returningPosition();
 			})
@@ -272,18 +321,21 @@ let simulationButtonClicked = true;
 simulationButton.addEventListener( "click" , () =>{
 	if(simulationButtonClicked){
 		container.removeChild(document.querySelector(".clickPlanets"));
-		for(let keys in sphere){
+		for(let keys in sphere){ //tira a cena que estava antes de clicar no botão de simular sist. Solar
 			scene.remove(scene.getObjectByName(sphere[keys]['name']));
 		}
 		createSimulationSolarSystem(simulationSphere);
+		scaleAnimation();
 		simulationButton.innerText = "Detalhes do Sistema Solar";
 		simulationButtonClicked = false;
 	}
 	else if(!simulationButtonClicked){
 		for(let keys in simulationSphere){
+			simulationSphere[keys]['posZ'] = 1;
 			scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
 		}
-		createSolarSystem(sphere); // PRECISA Aplicar escala no sol
+		
+		createSolarSystem(sphere);
 		simulationButtonClicked = true;
 		simulationButton.innerText = "Simular Sistema Solar";
 	}
