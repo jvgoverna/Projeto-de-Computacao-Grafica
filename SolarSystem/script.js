@@ -263,17 +263,13 @@ const scale = (simulationSphere) => {
 				
 				scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
 				scene.add(solarSystem);
-
-				
-
-				// let idSolaSystem = [...solarSystem.id.toString()];				
-				// console.log(idSolaSystem);
 				
 			}else{
 				direction = false;
 			}
 			console.log(`posZ : ${simulationSphere[keys]['posZ']}`);
 		}
+		console.log("DIRECTION " , direction);
 	}
 	requestAnimationFrame( () => scale(simulationSphere) );
 
@@ -330,11 +326,17 @@ simulationButton.addEventListener( "click" , () =>{
 		simulationButtonClicked = false;
 	}
 	else if(!simulationButtonClicked){
+
+		const sceneRemove = [... scene.children]; //copia da lista de objetos da cena
+		//console.log(sceneRemove);
+
+		sceneRemove.forEach( (element) => {
+			console.log("FUi ACIONADO");
+			scene.remove(element);
+		})
 		for(let keys in simulationSphere){
 			simulationSphere[keys]['posZ'] = 1;
-			scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
 		}
-		
 		createSolarSystem(sphere);
 		simulationButtonClicked = true;
 		simulationButton.innerText = "Simular Sistema Solar";
