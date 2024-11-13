@@ -330,39 +330,25 @@ const returningPosition = () => {
 let simulationAnimate = false;
 
 const scaleAndReturningCameraPosition = (simulationSphere) => {
-	let factor = 1.10;
-	let posZ;
+	let factor = 1.05;
 	if(simulationAnimate){
 		if(!simulationButtonClicked){
 			console.log("Alternando posição para a simulacao");
-			camera.position.z = 25;
+			camera.position.z = 45;
 
 			for(let keys in simulationSphere){
-				posZ = simulationSphere[keys]['posZ'];
-				let textureLoader = new THREE.TextureLoader();
-				let texture = textureLoader.load(simulationSphere[keys]['texture']);
-				let textureMaterial = new THREE.MeshBasicMaterial( { map: texture } );
-				
-				let solarSystem = new THREE.Mesh( simulationSphere[keys]['geometry'] ,textureMaterial );
-				
-	 			solarSystem.position.x = simulationSphere[keys]['posX'];
+				const planets = simulationSphere[keys];				
+				if(planets.posZ  < 23){
+					planets.posZ = parseFloat(planets.posZ * factor).toFixed(2);
+					const object = scene.getObjectByName(planets.name); //pega os objetos da cena através do nome
 
-				if(posZ < 5){
-					let newZ = parseFloat(posZ * factor).toFixed(2);
-					simulationSphere[keys]['posZ'] = newZ;
-	 				solarSystem.position.z = simulationSphere[keys]['posZ'];
+					object.position.z = planets.posZ; //atualiza a posição do objeto
 
-					scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
-					scene.add(solarSystem);
-
-					solarSystem.position.set(simulationSphere[keys]['posX'],0,simulationSphere[keys]['posZ']);
-
-					
+					console.log(object.position.z);
 				}else{
 					simulationAnimate = false;
 				}
-				console.log(`posZ : ${simulationSphere[keys]['posZ']}`);
-				
+
 			}
 			console.log("SIMULATION ANIMATE" , simulationAnimate);
 		}else{
@@ -447,15 +433,9 @@ simulationButton.addEventListener( "click" , () =>{
 		simulationButtonClicked = false;
 	}
 	else if(!simulationButtonClicked){	
-
-		const sceneRemove = [... scene.children]; //copia da lista de objetos da cena
-		//console.log(sceneRemove);
-		sceneRemove.forEach( (element) => {
-			console.log("FUi ACIONADO");
-			scene.remove(element);
-		})
 		for(let keys in simulationSphere){
 			simulationSphere[keys]['posZ'] = 1;
+			scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
 		}
 		createSolarSystem(sphere);
 		simulationButtonClicked = true;
