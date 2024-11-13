@@ -16,6 +16,8 @@ const sphere = {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 0xffff00} ),
 		posX : -5.4,
+		posY : 0,
+		posZ : 0,
 		scaleX : 3,
 		scaleY : 3,
 		name : 'Sol',
@@ -25,6 +27,8 @@ const sphere = {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 0xff0000 } ),
 		posX : 1,
+		posY : 1,
+		posZ : 1,
 		scaleX : 2,
 		scaleY : 2,
 		name : 'Mercúrio',
@@ -35,6 +39,8 @@ const sphere = {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
 		posX : 5,
+		posY : 2,
+		posZ : 1,
 		scaleX : 1.5,
 		scaleY : 1.5,
 		name : 'Vênus',
@@ -42,12 +48,21 @@ const sphere = {
 	}
 }
 
+const animateRotation = () => {
+	rotation = true;
+	requestAnimationFrame(() => createSolarSystem(sphere));
+}
 
+//let rotation = false;
 const createSolarSystem = (sphere) => {
 	let solarSystem;
 	let textureLoader;
 	let texture;
 	let textureMaterial;
+	let x;
+	let y;
+	let z;
+	let angle = 0.1;
 	const textTag = document.createElement("p");
 	textTag.setAttribute("class", "clickPlanets");
 	textTag.innerHTML = `Clique em algum planeta ou no sol para visualizar mais detalhes`;
@@ -65,9 +80,24 @@ const createSolarSystem = (sphere) => {
 		solarSystem.name = sphere[keys]['name'];
 
 		
-
-
 		scene.add( solarSystem);
+
+		// if(rotation){
+		// 	x = sphere[keys]['posX'];
+		// 	y = sphere[keys]['posY'];
+		// 	z = sphere[keys]['posZ'];
+
+		// 	let newY = y * Math.cos(angle) - z * Math.sin(angle);
+		// 	let newZ = y * Math.sin(angle) + z * Math.cos(angle);
+		// 	let newX = x;
+
+		// 	sphere[keys]['posX'] = newX;
+		// 	sphere[keys]['posY'] = newY;
+		// 	sphere[keys]['posZ'] = newZ;
+
+		// 	solarSystem.position.set(newX,newY,newZ);
+		// }
+		//requestAnimationFrame(() => createSolarSystem(sphere));
 	}
 }
 
@@ -133,7 +163,7 @@ const simulationSphere = {
 	Jupiter : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'orange' } ),
-		posX : -16,
+		posX : -17,
 		posZ : 1,
 		scaleX : 6,
 		scaleY : 6,
@@ -144,7 +174,7 @@ const simulationSphere = {
 	Saturn : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'yellow' } ),
-		posX : -22,
+		posX : -23,
 		posZ : 1,
 		scaleX : 5,
 		scaleY : 5,
@@ -155,7 +185,7 @@ const simulationSphere = {
 	Uranus : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
-		posX : -25,
+		posX : -27,
 		posZ : 1,
 		scaleX : 2,
 		scaleY : 2,
@@ -166,7 +196,7 @@ const simulationSphere = {
 	Neptune : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
-		posX : -27,
+		posX : -30,
 		posZ : 1,
 		scaleX : 2,
 		scaleY : 2,
@@ -299,97 +329,60 @@ const returningPosition = () => {
 
 let simulationAnimate = false;
 
-const cameraSimulation = () => {
+const scaleAndReturningCameraPosition = (simulationSphere) => {
+	let factor = 1.10;
+	let posZ;
 	if(simulationAnimate){
 		if(!simulationButtonClicked){
 			console.log("Alternando posição para a simulacao");
-			if(camera.position.z < 20.00){
-				camera.position.z = parseFloat( (camera.position.z + 0.10).toFixed(2) );
-				requestAnimationFrame(cameraSimulation);
-			}else{
-				simulationAnimate = false;
+			camera.position.z = 25;
+
+			for(let keys in simulationSphere){
+				posZ = simulationSphere[keys]['posZ'];
+				let textureLoader = new THREE.TextureLoader();
+				let texture = textureLoader.load(simulationSphere[keys]['texture']);
+				let textureMaterial = new THREE.MeshBasicMaterial( { map: texture } );
+				
+				let solarSystem = new THREE.Mesh( simulationSphere[keys]['geometry'] ,textureMaterial );
+				
+	 			solarSystem.position.x = simulationSphere[keys]['posX'];
+
+				if(posZ < 5){
+					let newZ = parseFloat(posZ * factor).toFixed(2);
+					simulationSphere[keys]['posZ'] = newZ;
+	 				solarSystem.position.z = simulationSphere[keys]['posZ'];
+
+					scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
+					scene.add(solarSystem);
+
+					solarSystem.position.set(simulationSphere[keys]['posX'],0,simulationSphere[keys]['posZ']);
+
+					
+				}else{
+					simulationAnimate = false;
+				}
+				console.log(`posZ : ${simulationSphere[keys]['posZ']}`);
+				
 			}
-			console.log(simulationAnimate);
-		}
-		else{
+			console.log("SIMULATION ANIMATE" , simulationAnimate);
+		}else{
 			console.log("Voltando para a posição original da camera");
 			if(camera.position.z > 5.00){
-				camera.position.z = parseFloat( (camera.position.z - 0.10).toFixed(2) );
-				requestAnimationFrame(cameraSimulation);
+				camera.position.z = parseFloat( (camera.position.z - 0.50).toFixed(2) );
+				console.log(camera.position.z);
 			}else{
 				simulationAnimate = false;
 			}
 		}
+		requestAnimationFrame( () => scaleAndReturningCameraPosition(simulationSphere) );
+		
 	}
-	console.log(`Camera X: ${camera.position.x} Camera Z: ${camera.position.z}`);
-	
 }
 
-const positioningSimulationCamera = () => {
+const scaleAndReturningCamera = () => {
 	simulationAnimate = true;
-	requestAnimationFrame(cameraSimulation);
+	requestAnimationFrame( () => scaleAndReturningCameraPosition(simulationSphere) );
 }
-
-
-let direction = false;
-const scale = (simulationSphere) => {
-	let factor = 1.10;
-	let posZ;
-
-	if(direction && !simulationAnimate){
-		for(let keys in simulationSphere){
-			posZ = simulationSphere[keys]['posZ'];
-			let textureLoader = new THREE.TextureLoader();
-			let texture = textureLoader.load(simulationSphere[keys]['texture']);
-			let textureMaterial = new THREE.MeshBasicMaterial( { map: texture } );
-			
-			let solarSystem = new THREE.Mesh( simulationSphere[keys]['geometry'] ,textureMaterial );
-			
-			solarSystem.position.x = simulationSphere[keys]['posX'];
-			if(posZ < 15){
-				let newZ = parseFloat(posZ * factor).toFixed(2);
-				
-				simulationSphere[keys]['posZ'] = newZ;
-				solarSystem.position.z = simulationSphere[keys]['posZ'];
-				
-				
-				scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
-				
-				scene.add(solarSystem);
-
-				
-				
-			}else{
-				//let test = [... scene.children];
-				//lastElement = valuesPosZ[valuesPosZ.length - 1];
-				
-				// let lastElement = test[test.length - 1];
-				// console.log(lastElement , simulationSphere[keys]['name']);
-				// test.forEach(element => {
-				// 	if(element != lastElement) scene.remove(element);
-				// });
-
-				let test = [... scene.children];
-				console.log(test);
-
-				
-
-				direction = false;
-			}
-			console.log(`posZ : ${simulationSphere[keys]['posZ']}`);
-		}
-		console.log("DIRECTION " , direction);
-	}
-	requestAnimationFrame( () => scale(simulationSphere) );
-
-	
-}
-
-const scaleAnimation = () => {
-	direction = true;
-	requestAnimationFrame( () => scale(simulationSphere) );
-}
-
 
 const test = () => {
 	const lista = [1,2,3,4,5];
@@ -450,7 +443,6 @@ simulationButton.addEventListener( "click" , () =>{
 			scene.remove(scene.getObjectByName(sphere[keys]['name']));
 		}
 		createSimulationSolarSystem(simulationSphere);
-		scaleAnimation();
 		simulationButton.innerText = "Detalhes do Sistema Solar";
 		simulationButtonClicked = false;
 	}
@@ -469,7 +461,7 @@ simulationButton.addEventListener( "click" , () =>{
 		simulationButtonClicked = true;
 		simulationButton.innerText = "Simular Sistema Solar";
 	}
-	positioningSimulationCamera();
+	scaleAndReturningCamera();
 })
 
 function animate() {
