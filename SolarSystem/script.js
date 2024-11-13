@@ -78,12 +78,102 @@ const simulationSphere = {
 	Sun : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 0xffff00} ),
+		posX : 0,
 		posZ : 1,
 		scaleX : 3,
 		scaleY : 3,
 		name : 'Sun',
 		texture : '../Files/sol.jpg'
 	},
+
+	Mercury : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 0xff0000 } ),
+		posX : -3,
+		posZ : 1,
+		scaleX : 2,
+		scaleY : 2,
+		name : 'Mercúrio',
+		texture : '../Files/mercurio.jpg'
+	},
+
+	Venus : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
+		posX : -5,
+		posZ : 1,
+		scaleX : 1.5,
+		scaleY : 1.5,
+		name : 'Vênus',
+		texture : '../Files/venus.jpg'
+	},
+
+	Earth : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 'green' } ),
+		posX : -8,
+		posZ : 1,
+		scaleX : 4,
+		scaleY : 4,
+		name : 'Terra',
+		texture : '../Files/terra.jpg'
+	},
+
+	Mars : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 'red' } ),
+		posX : -12,
+		posZ : 1,
+		scaleX : 3,
+		scaleY : 3,
+		name : 'Marte',
+		texture : '../Files/marte.jpg'
+	},
+
+	Jupiter : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 'orange' } ),
+		posX : -16,
+		posZ : 1,
+		scaleX : 6,
+		scaleY : 6,
+		name : 'Júpiter',
+		texture : '../Files/jupiter.jpg'
+	},
+
+	Saturn : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 'yellow' } ),
+		posX : -22,
+		posZ : 1,
+		scaleX : 5,
+		scaleY : 5,
+		name : 'Saturno',
+		texture : '../Files/saturno.jpg'
+	},
+
+	Uranus : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
+		posX : -25,
+		posZ : 1,
+		scaleX : 2,
+		scaleY : 2,
+		name : 'Urano',
+		texture : '../Files/uranio.jpg'
+	},
+
+	Neptune : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
+		posX : -27,
+		posZ : 1,
+		scaleX : 2,
+		scaleY : 2,
+		name : 'Netuno',
+		texture : '../Files/netuno.jpg'
+	},
+
 }
 
 const createSimulationSolarSystem = (simulationSphere) => {
@@ -98,6 +188,7 @@ const createSimulationSolarSystem = (simulationSphere) => {
 		textureMaterial = new THREE.MeshBasicMaterial( { map: texture } );
 
 		solarSystem = new THREE.Mesh( simulationSphere[keys]['geometry'] ,textureMaterial );
+		solarSystem.position.x = simulationSphere[keys]['posX'];
 		solarSystem.position.z = simulationSphere[keys]['posZ'];
 		solarSystem.scale.x = simulationSphere[keys]['scaleX'];
 		solarSystem.scale.y = simulationSphere[keys]['scaleY'];
@@ -254,6 +345,7 @@ const scale = (simulationSphere) => {
 			
 			let solarSystem = new THREE.Mesh( simulationSphere[keys]['geometry'] ,textureMaterial );
 			
+			solarSystem.position.x = simulationSphere[keys]['posX'];
 			if(posZ < 15){
 				let newZ = parseFloat(posZ * factor).toFixed(2);
 				
@@ -262,9 +354,26 @@ const scale = (simulationSphere) => {
 				
 				
 				scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
+				
 				scene.add(solarSystem);
+
+				
 				
 			}else{
+				//let test = [... scene.children];
+				//lastElement = valuesPosZ[valuesPosZ.length - 1];
+				
+				// let lastElement = test[test.length - 1];
+				// console.log(lastElement , simulationSphere[keys]['name']);
+				// test.forEach(element => {
+				// 	if(element != lastElement) scene.remove(element);
+				// });
+
+				let test = [... scene.children];
+				console.log(test);
+
+				
+
 				direction = false;
 			}
 			console.log(`posZ : ${simulationSphere[keys]['posZ']}`);
@@ -280,6 +389,21 @@ const scaleAnimation = () => {
 	direction = true;
 	requestAnimationFrame( () => scale(simulationSphere) );
 }
+
+
+const test = () => {
+	const lista = [1,2,3,4,5];
+
+	const copiaLista = [...lista , 100];
+
+	for(let i = 0 ; i < copiaLista.length ; i++){
+		copiaLista.shift();
+		i--;
+		console.log("LISTA ALTERADA: " , copiaLista);
+	}
+
+}
+//test();
 
 window.addEventListener("click" , (ev) => {
 	calculatePointerMovementMouse(ev);
@@ -316,6 +440,11 @@ let simulationButtonClicked = true;
 
 simulationButton.addEventListener( "click" , () =>{
 	if(simulationButtonClicked){
+
+		if(container.contains(document.querySelector(".backButton"))) {
+			container.removeChild(document.querySelector(".backButton"));
+			returningPosition();
+		}
 		container.removeChild(document.querySelector(".clickPlanets"));
 		for(let keys in sphere){ //tira a cena que estava antes de clicar no botão de simular sist. Solar
 			scene.remove(scene.getObjectByName(sphere[keys]['name']));
@@ -325,11 +454,10 @@ simulationButton.addEventListener( "click" , () =>{
 		simulationButton.innerText = "Detalhes do Sistema Solar";
 		simulationButtonClicked = false;
 	}
-	else if(!simulationButtonClicked){
+	else if(!simulationButtonClicked){	
 
 		const sceneRemove = [... scene.children]; //copia da lista de objetos da cena
 		//console.log(sceneRemove);
-
 		sceneRemove.forEach( (element) => {
 			console.log("FUi ACIONADO");
 			scene.remove(element);
