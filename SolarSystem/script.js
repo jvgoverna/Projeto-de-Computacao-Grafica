@@ -16,37 +16,111 @@ const sphere = {
 	Sun : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 0xffff00} ),
-		posX : -5.4,
-		posY : 0,
-		posZ : 0,
-		scaleX : 3,
-		scaleY : 3,
-		name : 'Sol',
+		posX : -4.25,
+		posY : 1.2,
+		posZ : 1,
+		scaleX : 3.6,
+		scaleY : 3.6,
+		name : 'Sun',
 		texture : '../Files/sol.jpg'
 	},
-	Mercury : {
+
+	Jupiter : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
-		material : new THREE.MeshBasicMaterial( {color : 0xff0000 } ),
-		posX : -1,
-		posY : 0,
+		material : new THREE.MeshBasicMaterial( {color : 'orange' } ),
+		posX : -0.85,
+		posY : 1.2,
 		posZ : 1,
-		scaleX : 1,
-		scaleY : 1,
-		name : 'Mercúrio',
-		texture : '../Files/mercurio.jpg'
+		scaleX : 2.9,
+		scaleY : 2.9,
+		name : 'Júpiter',
+		texture : '../Files/jupiter.jpg'
+	},
+
+	Saturn : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 'yellow' } ),
+		posX : 2,
+		posY : 1.2,
+		posZ : 1,
+		scaleX : 2.6,
+		scaleY : 2.6,
+		name : 'Saturno',
+		texture : '../Files/saturno.jpg'
+	},
+
+	Uranus : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
+		posX : 4.65,
+		posY : 1.25,
+		posZ : 1,
+		scaleX : 2.3,
+		scaleY : 2.3,
+		name : 'Urano',
+		texture : '../Files/uranio.jpg'
+	},
+
+	Neptune : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
+		posX : 4.65,
+		posY : -1.2,
+		posZ : 1,
+		scaleX : 1.9,
+		scaleY : 1.9,
+		name : 'Netuno',
+		texture : '../Files/netuno.jpg'
+	},
+
+	Earth : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 'green' } ),
+		posX : 2.55,
+		posY : -1.2,
+		posZ : 1,
+		scaleX : 1.7,
+		scaleY : 1.7,
+		name : 'Terra',
+		texture : '../Files/terra.jpg'
 	},
 
 	Venus : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
-		posX : 3,
-		posY : 0,
+		posX : 0.75,
+		posY : -1.2,
 		posZ : 1,
-		scaleX : 4,
-		scaleY : 4,
+		scaleX : 1.6,
+		scaleY : 1.6,
 		name : 'Vênus',
 		texture : '../Files/venus.jpg'
-	}
+	},
+
+	Mars : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 'red' } ),
+		posX : -0.90,
+		posY : -1.2,
+		posZ : 1,
+		scaleX : 1.5,
+		scaleY : 1.5,
+		name : 'Marte',
+		texture : '../Files/marte.jpg'
+	},
+
+	Mercury : {
+		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
+		material : new THREE.MeshBasicMaterial( {color : 0xff0000 } ),
+		posX: -2.5,
+		posY: -1.2,
+		posZ: 1,
+		scaleX: 1.4,
+		scaleY: 1.4,
+		name : 'Mercúrio',
+		texture : '../Files/mercurio.jpg'
+	},
+
 }
 
 let spinning = false;
