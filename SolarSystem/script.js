@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+const scene = new THREE.Scene(); // Cria a cena
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 ); // Cria a camera
 
+// Renderização
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setAnimationLoop( animate );
@@ -26,11 +27,11 @@ const sphere = {
 	Mercury : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 0xff0000 } ),
-		posX : 1,
-		posY : 1,
+		posX : -1,
+		posY : 0,
 		posZ : 1,
-		scaleX : 2,
-		scaleY : 2,
+		scaleX : 1,
+		scaleY : 1,
 		name : 'Mercúrio',
 		texture : '../Files/mercurio.jpg'
 	},
@@ -38,19 +39,47 @@ const sphere = {
 	Venus : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
-		posX : 5,
-		posY : 2,
+		posX : 3,
+		posY : 0,
 		posZ : 1,
-		scaleX : 1.5,
-		scaleY : 1.5,
+		scaleX : 4,
+		scaleY : 4,
 		name : 'Vênus',
 		texture : '../Files/venus.jpg'
 	}
 }
 
+let spinning = false;
+
 const animateRotation = () => {
-	rotation = true;
-	requestAnimationFrame(() => createSolarSystem(sphere));
+	spinning = true;
+	requestAnimationFrame(() => rotation(sphere));
+}
+
+const rotation = (sphere) => {
+	let angle = 0.10;
+	if(spinning){
+		for(let keys in sphere){
+			const planets = sphere[keys];
+
+			//Rotação em Y
+			
+			planets.posZ = parseFloat( planets.posZ * Math.cos(angle) - planets.posX * Math.sin(angle) ).toFixed(2);
+			planets.posX = parseFloat( planets.posZ * Math.sin(angle) + planets.posX * Math.cos(angle) ).toFixed(2);
+			planets.posY = planets.posY;
+			
+			const object = scene.getObjectByName(planets.name); //pega os objetos da cena através do nome
+			
+			object.position.x = planets.posX;
+			object.position.y = planets.posY;
+			object.position.z = planets.posZ;
+			
+			
+			
+			console.log("POSIÇÕES: ",planets.posX , planets.posY , planets.posZ);
+		}
+	}
+	requestAnimationFrame(() => rotation(sphere));
 }
 
 //let rotation = false;
@@ -59,10 +88,6 @@ const createSolarSystem = (sphere) => {
 	let textureLoader;
 	let texture;
 	let textureMaterial;
-	let x;
-	let y;
-	let z;
-	let angle = 0.1;
 	const textTag = document.createElement("p");
 	textTag.setAttribute("class", "clickPlanets");
 	textTag.innerHTML = `Clique em algum planeta ou no sol para visualizar mais detalhes`;
@@ -75,33 +100,20 @@ const createSolarSystem = (sphere) => {
 
 		solarSystem = new THREE.Mesh( sphere[keys]['geometry'] ,textureMaterial );
 		solarSystem.position.x = sphere[keys]['posX'];
+		solarSystem.position.y = sphere[keys]['posY'];
+		solarSystem.position.z = sphere[keys]['posZ'];
 		solarSystem.scale.x = sphere[keys]['scaleX'];
 		solarSystem.scale.y = sphere[keys]['scaleY'];
 		solarSystem.name = sphere[keys]['name'];
 
 		
 		scene.add( solarSystem);
-
-		// if(rotation){
-		// 	x = sphere[keys]['posX'];
-		// 	y = sphere[keys]['posY'];
-		// 	z = sphere[keys]['posZ'];
-
-		// 	let newY = y * Math.cos(angle) - z * Math.sin(angle);
-		// 	let newZ = y * Math.sin(angle) + z * Math.cos(angle);
-		// 	let newX = x;
-
-		// 	sphere[keys]['posX'] = newX;
-		// 	sphere[keys]['posY'] = newY;
-		// 	sphere[keys]['posZ'] = newZ;
-
-		// 	solarSystem.position.set(newX,newY,newZ);
-		// }
-		//requestAnimationFrame(() => createSolarSystem(sphere));
+		//animateRotation();
 	}
 }
 
 createSolarSystem(sphere);
+
 camera.position.z = 5;
 
 const simulationSphere = {
@@ -110,8 +122,8 @@ const simulationSphere = {
 		material : new THREE.MeshBasicMaterial( {color : 0xffff00} ),
 		posX : 0,
 		posZ : 1,
-		scaleX : 3,
-		scaleY : 3,
+		scaleX : 6.9,
+		scaleY : 6.9,
 		name : 'Sun',
 		texture : '../Files/sol.jpg'
 	},
@@ -119,10 +131,10 @@ const simulationSphere = {
 	Mercury : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 0xff0000 } ),
-		posX : -3,
+		posX : -4.4,
 		posZ : 1,
-		scaleX : 2,
-		scaleY : 2,
+		scaleX : 1.4,
+		scaleY : 1.4,
 		name : 'Mercúrio',
 		texture : '../Files/mercurio.jpg'
 	},
@@ -130,10 +142,10 @@ const simulationSphere = {
 	Venus : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
-		posX : -5,
+		posX : -6.7,
 		posZ : 1,
-		scaleX : 1.5,
-		scaleY : 1.5,
+		scaleX : 2.4,
+		scaleY : 2.4,
 		name : 'Vênus',
 		texture : '../Files/venus.jpg'
 	},
@@ -141,10 +153,10 @@ const simulationSphere = {
 	Earth : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'green' } ),
-		posX : -8,
+		posX : -9.9,
 		posZ : 1,
-		scaleX : 4,
-		scaleY : 4,
+		scaleX : 2.9,
+		scaleY : 2.9,
 		name : 'Terra',
 		texture : '../Files/terra.jpg'
 	},
@@ -152,10 +164,10 @@ const simulationSphere = {
 	Mars : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'red' } ),
-		posX : -12,
+		posX : -12.9,
 		posZ : 1,
-		scaleX : 3,
-		scaleY : 3,
+		scaleX : 1.9,
+		scaleY : 1.9,
 		name : 'Marte',
 		texture : '../Files/marte.jpg'
 	},
@@ -163,10 +175,10 @@ const simulationSphere = {
 	Jupiter : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'orange' } ),
-		posX : -17,
+		posX : -16.8,
 		posZ : 1,
-		scaleX : 6,
-		scaleY : 6,
+		scaleX : 4.9,
+		scaleY : 4.9,
 		name : 'Júpiter',
 		texture : '../Files/jupiter.jpg'
 	},
@@ -174,10 +186,10 @@ const simulationSphere = {
 	Saturn : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'yellow' } ),
-		posX : -23,
+		posX : -22,
 		posZ : 1,
-		scaleX : 5,
-		scaleY : 5,
+		scaleX : 4.4,
+		scaleY : 4.4,
 		name : 'Saturno',
 		texture : '../Files/saturno.jpg'
 	},
@@ -185,10 +197,10 @@ const simulationSphere = {
 	Uranus : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
-		posX : -27,
+		posX : -26.8,
 		posZ : 1,
-		scaleX : 2,
-		scaleY : 2,
+		scaleX : 3.9,
+		scaleY : 3.9,
 		name : 'Urano',
 		texture : '../Files/uranio.jpg'
 	},
@@ -196,10 +208,10 @@ const simulationSphere = {
 	Neptune : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
-		posX : -30,
+		posX : -31,
 		posZ : 1,
-		scaleX : 2,
-		scaleY : 2,
+		scaleX : 3.4,
+		scaleY : 3.4,
 		name : 'Netuno',
 		texture : '../Files/netuno.jpg'
 	},
@@ -369,20 +381,6 @@ const scaleAndReturningCamera = () => {
 	simulationAnimate = true;
 	requestAnimationFrame( () => scaleAndReturningCameraPosition(simulationSphere) );
 }
-
-const test = () => {
-	const lista = [1,2,3,4,5];
-
-	const copiaLista = [...lista , 100];
-
-	for(let i = 0 ; i < copiaLista.length ; i++){
-		copiaLista.shift();
-		i--;
-		console.log("LISTA ALTERADA: " , copiaLista);
-	}
-
-}
-//test();
 
 window.addEventListener("click" , (ev) => {
 	calculatePointerMovementMouse(ev);
