@@ -333,21 +333,29 @@ const clickObject = () => {
 		for(let keys in sphere){
 			let name = sphere[keys]['name'];
 			const clickedObject = intersects[0].object;
-				
+			
 			if(clickedObject.name === name){
-				console.log(camera.position.x , camera.position.z);
 				let posX = sphere[keys]["posX"];
-
-				if(clickedObject.name === "Sol"){
-
-					if(camera.position.x > posX){
+				console.log("iodjeiuojdioedoiej: ",camera.position.x, camera.position.y, camera.position.z);
+				
+				if(clickedObject.name === "Sun"){
+					if(camera.position.x > -4){
 						camera.position.x = parseFloat((camera.position.x - 0.2).toFixed(2));
-					}else{
+					}
+					else{
 						animation = false;
 					}
-
-					if(camera.position.z > 2){
+					if(camera.position.z > 4){
 						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
+					}
+					if (camera.position.y < 0.8) {
+						camera.position.y = parseFloat((camera.position.y + 0.2).toFixed(2));
+					}
+					
+					for(let keys in sphere){
+						if(sphere[keys]['name'] !== "Sun"){
+							scene.remove(scene.getObjectByName(sphere[keys]['name']));
+						}
 					}
 
 				}else{
@@ -389,9 +397,7 @@ const startAnimation = () => {
 let backAnimation = false;
 const returningToTheOriginalCameraPositioning = () => {
 	if(backAnimation){
-
 		console.log("CLIQUEI");
-		
 		
 		if(camera.position.x > 0 ){
 			camera.position.x = parseFloat((camera.position.x - 0.20).toFixed(2));
@@ -402,6 +408,12 @@ const returningToTheOriginalCameraPositioning = () => {
 		}
 		if (camera.position.z < 5.00){
 			camera.position.z = parseFloat((camera.position.z + 0.20).toFixed(2));
+		}
+		if (camera.position.y > 0) {
+			camera.position.y = parseFloat((camera.position.y - 0.20).toFixed(2));
+		} 
+		else if(camera.position.y < 0){
+			camera.position.y = parseFloat((camera.position.y + 0.20).toFixed(2));
 		}
 		requestAnimationFrame(returningToTheOriginalCameraPositioning)
 		console.log(camera.position.x, camera.position.z);
@@ -471,6 +483,11 @@ window.addEventListener("click" , (ev) => {
 			container.appendChild(backButton);
 
 			backButton.addEventListener("click" , () => {
+				for(let keys in simulationSphere){
+					scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
+				}
+				container.removeChild(document.querySelector(".clickPlanets"));
+				createSolarSystem(sphere);
 				objectName.innerHTML = `Clique em algum planeta ou no sol para visualizar mais detalhes`;
 				container.removeChild(backButton);
 				returningPosition();
