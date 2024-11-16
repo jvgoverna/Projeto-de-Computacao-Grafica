@@ -156,23 +156,42 @@ const rotation = (sphere) => {
 	requestAnimationFrame(() => rotation(sphere));
 }
 
+
+//ADICIONAR FONTE DE LUZ AO SOL
+const addSunLight = () => {
+    // Cria a luz pontual no Sol
+    const sunLight = new THREE.PointLight(0xffffcc, 1.5, 100); // Luz amarelada, intensidade 1.5, alcance 100
+    sunLight.position.set(-4.25, 1.2, 1); // Posição do Sol (coincide com sphere.Sun)
+    // sunLight.castShadow = true; // Permite sombras (opcional)
+
+    // // Configura o mapa de sombras (opcional, se sombras forem habilitadas)
+    // sunLight.shadow.mapSize.width = 1024; // Qualidade das sombras (largura)
+    // sunLight.shadow.mapSize.height = 1024; // Qualidade das sombras (altura)
+    // sunLight.shadow.camera.near = 0.1; // Proximidade da câmera de sombra
+    // sunLight.shadow.camera.far = 50; // Distância máxima da sombra
+
+    // Adiciona a luz à cena
+    scene.add(sunLight);
+
+    // Adiciona um helper visual para depuração (opcional)
+    const lightHelper = new THREE.PointLightHelper(sunLight, 1);
+    scene.add(lightHelper);
+};
+
+
 //let rotation = false;
 const createSolarSystem = (sphere) => {
-	let solarSystem;
-	let textureLoader;
-	let texture;
-	let textureMaterial;
 	const textTag = document.createElement("p");
 	textTag.setAttribute("class", "clickPlanets");
 	textTag.innerHTML = `Clique em algum planeta ou no sol para visualizar mais detalhes`;
 	container.appendChild(textTag);
 
 	for( let keys in sphere ){
-		textureLoader = new THREE.TextureLoader();
-		texture = textureLoader.load(sphere[keys]['texture']);
-		textureMaterial = new THREE.MeshBasicMaterial( { map: texture } );
+		let textureLoader = new THREE.TextureLoader();
+		let texture = textureLoader.load(sphere[keys]['texture']);
+		let textureMaterial = new THREE.MeshBasicMaterial( { map: texture } );
 
-		solarSystem = new THREE.Mesh( sphere[keys]['geometry'] ,textureMaterial );
+		let solarSystem = new THREE.Mesh( sphere[keys]['geometry'] ,textureMaterial );
 		solarSystem.position.x = sphere[keys]['posX'];
 		solarSystem.position.y = sphere[keys]['posY'];
 		solarSystem.position.z = sphere[keys]['posZ'];
@@ -181,9 +200,11 @@ const createSolarSystem = (sphere) => {
 		solarSystem.name = sphere[keys]['name'];
 
 		
-		scene.add( solarSystem);
+		scene.add(solarSystem);
 		//animateRotation();
 	}
+	//ADICIONAR LUZ SOLAR
+	//addSunLight();
 }
 
 createSolarSystem(sphere);
@@ -292,6 +313,49 @@ const simulationSphere = {
 
 }
 
+const clearScene = () => {
+    for (let key in simulationSphere) {
+        const planet = scene.getObjectByName(simulationSphere[key].name);
+        if (planet) {
+            scene.remove(planet); // Remove o planeta da cena
+        }
+    }
+};
+
+const orbitPlanets = (simulationSphere) => {
+	//addSunLight();
+	const time = Date.now() * 0.00000001;
+
+	const orbitalPeriods = {
+        Mercury: 1, // 0.24,
+        Venus: 2, // 0.615,
+        Earth: 3, // 1,
+        Mars: 4, // 1.88,
+        Jupiter: 6, // 11.86,
+        Saturn: 7, // 29.46,
+        Uranus: 9, // 84.02,
+        Neptune: 12, // 164.79
+    };
+
+	for (let keys in simulationSphere) {
+		if (keys !== 'Sun') {
+			const planet = scene.getObjectByName(simulationSphere[keys]['name']);
+            const radius = Math.abs(simulationSphere[keys].posX); // radianos
+			const periodInYears = orbitalPeriods[keys]; // período em anos
+            const periodInSeconds = periodInYears * 365.25 * 24 * 60 * 60; // converte o período para segundos
+            const angularSpeed = (2 * Math.PI) / periodInSeconds; // vai calcular a velodidade angular em rad/s
+            const initialAngle = Math.atan2(planet.position.y, planet.position.x); // inicia o ângulo baseado na posição inicial dele
+            const angle = initialAngle + angularSpeed * time; // atualiza o ângulo com base no tempo e na velocidade angular
+
+            planet.position.x = radius * Math.cos(angle);
+            planet.position.y = radius * Math.sin(angle);
+		}
+	}
+
+	renderer.render(scene, camera);
+	requestAnimationFrame(() => orbitPlanets(simulationSphere));
+}
+
 const createSimulationSolarSystem = (simulationSphere) => {
 	let solarSystem;
 	let textureLoader;
@@ -311,7 +375,9 @@ const createSimulationSolarSystem = (simulationSphere) => {
 		solarSystem.name = simulationSphere[keys]['name'];
 
 		scene.add( solarSystem);
+
 	}
+	// orbitPlanets(simulationSphere);
 }
 
 const raycaster = new THREE.Raycaster();
@@ -631,19 +697,16 @@ const returningToTheOriginalCameraPositioning = () => {
     if (backAnimation) {
         console.log(camera.position.x, camera.position.y, camera.position.z);
 
-        // Ajuste X
         if (camera.position.x > 0) {
             camera.position.x = parseFloat((camera.position.x - 0.20).toFixed(2));
         } else if (camera.position.x < 0) {
             camera.position.x = parseFloat((camera.position.x + 0.20).toFixed(2));
         }
 
-        // Ajuste Z
         if (camera.position.z < 5.00) {
             camera.position.z = parseFloat((camera.position.z + 0.20).toFixed(2));
         }
 
-        // Ajuste Y
         if (camera.position.y > 0) {
             camera.position.y = parseFloat((camera.position.y - 0.20).toFixed(2));
         } else if (camera.position.y < 0) {
@@ -685,8 +748,8 @@ const scaleAndReturningCameraPosition = (simulationSphere) => {
 					console.log(object.position.z);
 				}else{
 					simulationAnimate = false;
+					orbitPlanets(simulationSphere);
 				}
-
 			}
 			console.log("SIMULATION ANIMATE" , simulationAnimate);
 		}else{
@@ -713,7 +776,6 @@ window.addEventListener("click" , (ev) => {
 	const intersects = raycaster.intersectObjects( scene.children );
 	let objectName = document.querySelector(".clickPlanets");
 	let details = document.createElement('p');
-    // Só cria o botão se ele ainda não existir
     
 	if(intersects.length > 0){ //clique em algum objeto
 		objectName.innerText = `${intersects[0].object.name}`;
@@ -862,6 +924,7 @@ simulationButton.addEventListener( "click" , () =>{
 		simulationButtonClicked = false;
 	}
 	else if(!simulationButtonClicked){	
+		clearScene();
 		for(let keys in simulationSphere){
 			simulationSphere[keys]['posZ'] = 1;
 			scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
