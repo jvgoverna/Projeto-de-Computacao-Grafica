@@ -629,7 +629,7 @@ const startAnimation = () => {
 let backAnimation = false;
 const returningToTheOriginalCameraPositioning = () => {
     if (backAnimation) {
-        console.log("Júpiter - Posição Atual:", camera.position.x, camera.position.y, camera.position.z);
+        console.log(camera.position.x, camera.position.y, camera.position.z);
 
         // Ajuste X
         if (camera.position.x > 0) {
@@ -711,114 +711,130 @@ const scaleAndReturningCamera = () => {
 window.addEventListener("click" , (ev) => {
 	calculatePointerMovementMouse(ev);
 	const intersects = raycaster.intersectObjects( scene.children );
-	let backButton = document.querySelector(".backButton");
 	let objectName = document.querySelector(".clickPlanets");
 	let details = document.createElement('p');
     // Só cria o botão se ele ainda não existir
-    if (!backButton) {
+    
+	if(intersects.length > 0){ //clique em algum objeto
+		objectName.innerText = `${intersects[0].object.name}`;
+		details.setAttribute('class' , 'details');
+		
+		const textBack = document.createElement('p');
+		textBack.setAttribute('class' , 'textBack');
+		textBack.innerText = "Pressione ESC para voltar para o menu de detalhes do Sistema Solar";
+		container.appendChild(textBack);
 
-		if(intersects.length > 0){ //clique em algum objeto
-			objectName.innerText = `${intersects[0].object.name}`;
-			backButton = document.createElement("button");
-			backButton.setAttribute("class", "backButton");
-			container.appendChild(backButton);
+		container.removeChild(simulationButton);
 
-			details.setAttribute('class' , 'details');
-			
-			const sunDetails = detailsPlanets.Sun;
-			const mercuryDetails = detailsPlanets.Mercury;
-			const venusDetails = detailsPlanets.Venus;
-			const earthDetails = detailsPlanets.Earth;
-			const marsDetails = detailsPlanets.Mars;
-			const jupiterDetails = detailsPlanets.Jupiter;
-			const saturnDetails = detailsPlanets.Saturn;
-			const uranusDetails = detailsPlanets.Uranus;
-			const neptuneDetails = detailsPlanets.Neptune;
-			// Iterar e exibir no console
+		const sunDetails = detailsPlanets.Sun;
+		const mercuryDetails = detailsPlanets.Mercury;
+		const venusDetails = detailsPlanets.Venus;
+		const earthDetails = detailsPlanets.Earth;
+		const marsDetails = detailsPlanets.Mars;
+		const jupiterDetails = detailsPlanets.Jupiter;
+		const saturnDetails = detailsPlanets.Saturn;
+		const uranusDetails = detailsPlanets.Uranus;
+		const neptuneDetails = detailsPlanets.Neptune;
+		// Iterar e exibir no console
 
-			if(intersects[0].object.name === "Sun"){
-				for (let key in sunDetails) {
-					details.style.color = '#ddc01b';
-					details.innerHTML += `${key}: ${sunDetails[key]}<br>`;
-				}
-				container.appendChild(details);
+		if(intersects[0].object.name === "Sun"){
+			for (let key in sunDetails) {
+				details.style.color = '#ddc01b';
+				details.innerHTML += `${key}: ${sunDetails[key]}<br>`;
 			}
-
-			else if(intersects[0].object.name === "Mercúrio"){
-				for (let key in mercuryDetails) {
-					details.style.color = '#91837c';
-					details.innerHTML += `${key}: ${mercuryDetails[key]}<br>`;
-				}
-				container.appendChild(details);
-			}
-
-			else if(intersects[0].object.name === "Vênus"){
-				for (let key in venusDetails) {
-					details.style.color = '#b0b681';
-					details.innerHTML += `${key}: ${venusDetails[key]}<br>`;
-				}
-				container.appendChild(details);
-			}
-			
-			else if(intersects[0].object.name === "Terra"){
-				for (let key in earthDetails) {
-					details.style.color = '#126e12';
-					details.innerHTML += `${key}: ${earthDetails[key]}<br>`;
-				}
-				container.appendChild(details);
-			}
-
-			else if(intersects[0].object.name === "Marte"){
-				for (let key in marsDetails) {
-					details.style.color = '#e96629';
-					details.innerHTML += `${key}: ${marsDetails[key]}<br>`;
-				}
-				container.appendChild(details);
-			}
-
-			else if(intersects[0].object.name === "Júpiter"){
-				for (let key in jupiterDetails) {
-					details.style.color = '#b17424';
-					details.innerHTML += `${key}: ${jupiterDetails[key]}<br>`;
-				}
-				container.appendChild(details);
-			}
-			
-			else if(intersects[0].object.name === "Saturno"){
-				for (let key in saturnDetails) {
-					details.style.color = '#dbbc92';
-					details.innerHTML += `${key}: ${saturnDetails[key]}<br>`;
-				}
-				container.appendChild(details);
-			}
-			
-			else if(intersects[0].object.name === "Urano"){
-				for (let key in uranusDetails) {
-					details.style.color = '#a0e7e7';
-					details.innerHTML += `${key}: ${uranusDetails[key]}<br>`;
-				}
-				container.appendChild(details);
-			}
-			
-			else if(intersects[0].object.name === "Netuno"){
-				for (let key in neptuneDetails) {
-					details.style.color = '#258fc0';
-					details.innerHTML += `${key}: ${neptuneDetails[key]}<br>`;
-				}
-				container.appendChild(details);
-			}
-
-
-			backButton.addEventListener("click" , () => {
-				container.removeChild(document.querySelector(".clickPlanets"));
-				createSolarSystem(sphere);
-				objectName.innerHTML = `Clique em algum planeta ou no sol para visualizar mais detalhes`;
-				container.removeChild(backButton);
-				container.removeChild(details);
-				returningPosition();
-			})
+			container.appendChild(details);
 		}
-    }
+
+		else if(intersects[0].object.name === "Mercúrio"){
+			for (let key in mercuryDetails) {
+				details.style.color = '#91837c';
+				details.innerHTML += `${key}: ${mercuryDetails[key]}<br>`;
+			}
+			container.appendChild(details);
+		}
+
+		else if(intersects[0].object.name === "Vênus"){
+			for (let key in venusDetails) {
+				details.style.color = '#b0b681';
+				details.innerHTML += `${key}: ${venusDetails[key]}<br>`;
+			}
+			container.appendChild(details);
+		}
+		
+		else if(intersects[0].object.name === "Terra"){
+			for (let key in earthDetails) {
+				details.style.color = '#126e12';
+				details.innerHTML += `${key}: ${earthDetails[key]}<br>`;
+			}
+			container.appendChild(details);
+		}
+
+		else if(intersects[0].object.name === "Marte"){
+			for (let key in marsDetails) {
+				details.style.color = '#e96629';
+				details.innerHTML += `${key}: ${marsDetails[key]}<br>`;
+			}
+			container.appendChild(details);
+		}
+
+		else if(intersects[0].object.name === "Júpiter"){
+			for (let key in jupiterDetails) {
+				details.style.color = '#b17424';
+				details.innerHTML += `${key}: ${jupiterDetails[key]}<br>`;
+			}
+			container.appendChild(details);
+		}
+		
+		else if(intersects[0].object.name === "Saturno"){
+			for (let key in saturnDetails) {
+				details.style.color = '#dbbc92';
+				details.innerHTML += `${key}: ${saturnDetails[key]}<br>`;
+			}
+			container.appendChild(details);
+		}
+		
+		else if(intersects[0].object.name === "Urano"){
+			for (let key in uranusDetails) {
+				details.style.color = '#a0e7e7';
+				details.innerHTML += `${key}: ${uranusDetails[key]}<br>`;
+			}
+			container.appendChild(details);
+		}
+		
+		else if(intersects[0].object.name === "Netuno"){
+			for (let key in neptuneDetails) {
+				details.style.color = '#258fc0';
+				details.innerHTML += `${key}: ${neptuneDetails[key]}<br>`;
+			}
+			container.appendChild(details);
+		}
+
+
+		window.addEventListener("keydown", (event) => {
+			if (event.key === "Escape") { // Detecta a tecla Esc
+
+				const objectName = document.querySelector(".clickPlanets");
+				
+				container.removeChild(textBack);
+
+				if(container.contains(objectName)){
+					container.removeChild(objectName);
+				}
+				
+				container.removeChild(details);
+				
+				for (let keys in sphere) {
+					scene.remove(scene.getObjectByName(sphere[keys]['name']));
+				}
+		
+				createSolarSystem(sphere);
+
+				container.appendChild(simulationButton);
+						
+				returningPosition();
+			}
+		});
+	}
 
 	startAnimation();
 })
@@ -834,10 +850,6 @@ let simulationButtonClicked = true;
 simulationButton.addEventListener( "click" , () =>{
 	if(simulationButtonClicked){
 
-		if(container.contains(document.querySelector(".backButton"))) {
-			container.removeChild(document.querySelector(".backButton"));
-			returningPosition();
-		}
 		if(container.contains(document.querySelector(".details"))) {
 			container.removeChild(document.querySelector(".details"));
 		}
