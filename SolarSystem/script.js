@@ -325,9 +325,101 @@ const calculatePointerMovementMouse = (ev) => {
 
 let animation = false;
 
+const detailsPlanets = {
+	Sun : {
+		name : 'Sol',
+		body_type : 'Estrela (classe G2V)',
+		year : 'Não aplicável (centro do Sistema Solar)',
+		temperature : 'Cerca de 5.500 °C (na superfície), 15 milhões °C (no núcleo)',
+		velocity : 'Não aplicável',
+		moon : 'Não possui',
+		position : 'Centro do Sistema Solar',
+		diameter : '1.392.700 km'
+	},
+	Mercury : {
+		name : 'Mercúrio',
+		body_type : 'Planeta rochoso',
+		year : '88 dias terrestres',
+		temperature : '-173 °C à noite a 427 °C durante o dia',
+		velocity : '47,87 km/s',
+		moon : 'Nenhuma',
+		position : '1º planeta a partir do Sol',
+		diameter : '4.880 km',
+	},
+	Venus : {
+		name : 'Vênus',
+		body_type : 'Planeta rochoso',
+		year : '225 dias terrestres',
+		temperature : 'Cerca de 462 °C (efeito estufa intenso)',
+		velocity : '35,02 km/s',
+		moon : 'Nenhuma',
+		position : '2º planeta a partir do Sol',
+		diameter : '12.104 km',
+	},
+	Earth : {
+		name : 'Terra',
+		body_type : 'Planeta rochoso',
+		year : '365,25 dias terrestres',
+		temperature : 'Cerca de 15 °C',
+		velocity : '29,78 km/s',
+		moon : '1 (Lua)',
+		position : '3º planeta a partir do Sol',
+		diameter : '12.742 km',
+	},
+	Mars : {
+		name : 'Marte',
+		body_type : 'Planeta rochoso',
+		year : '687 dias terrestres',
+		temperature : 'Cerca de -60 °C',
+		velocity : '24,077 km/s',
+		moon : '2 (Fobos e Deimos)',
+		position : '4º planeta a partir do Sol',
+		diameter : '6.779 km',
+	},
+	Jupiter : {
+		name : 'Júpiter',
+		body_type : 'Planeta gasoso',
+		year : '11,86 anos terrestres',
+		temperature : 'Cerca de -110 °C',
+		velocity : '13,07 km/s',
+		moon : '79 (incluindo Io, Europa, Ganimedes e Calisto)',
+		position : '5º planeta a partir do Sol',
+		diameter : '139.820 km',
+	},
+	Saturn : {
+		name: 'Saturno',
+		body_type : 'Planeta gasoso',
+		year : '29,46 anos terrestres',
+		temperature : 'Cerca de -140 °C',
+		velocity : '9,69 km/s',
+		moon : '83 (incluindo Titã e Encélado)',
+		position : '6º planeta a partir do Sol',
+		diameter : '116.460 km',
+	},
+	Uranus : {
+		name : 'Urano',
+		body_type : 'Planeta gasoso (gelo)',
+		year : '84 anos terrestres',
+		temperature : 'Cerca de -195 °C',
+		velocity : '6,81 km/s',
+		moon : '27 (incluindo Miranda, Ariel, Umbriel, Titânia e Oberon)',
+		position : '7º planeta a partir do Sol',
+		diameter : '50.724 km',
+	},
+	Neptune : {
+		name : 'Netuno',
+		body_type : 'Planeta gasoso (gelo)',
+		year : '164,8 anos terrestres',
+		temperature : 'Cerca de -200 °C',
+		velocity : '5,43 km/s',
+		moon : '14 (incluindo Tritão)',
+		position : '8º planeta a partir do Sol',
+		diameter : '49.244 km',
+	}
+}
+
 const clickObject = () => {
 	const intersects = raycaster.intersectObjects( scene.children );
-
 	if(animation && intersects.length > 0){
 
 		for(let keys in sphere){
@@ -336,7 +428,7 @@ const clickObject = () => {
 			
 			if(clickedObject.name === name){
 				let posX = sphere[keys]["posX"];
-				console.log("iodjeiuojdioedoiej: ",camera.position.x, camera.position.y, camera.position.z);
+				console.log(camera.position.x, camera.position.y, camera.position.z);
 				
 				if(clickedObject.name === "Sun"){
 					if(camera.position.x > -4){
@@ -345,11 +437,11 @@ const clickObject = () => {
 					else{
 						animation = false;
 					}
-					if(camera.position.z > 4){
-						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
-					}
 					if (camera.position.y < 0.8) {
 						camera.position.y = parseFloat((camera.position.y + 0.2).toFixed(2));
+					}
+					if(camera.position.z > 4){
+						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
 					}
 					
 					for(let keys in sphere){
@@ -357,31 +449,171 @@ const clickObject = () => {
 							scene.remove(scene.getObjectByName(sphere[keys]['name']));
 						}
 					}
-
-				}else{
-					if(posX > 2){
-						if(camera.position.x < posX){
-							camera.position.x = parseFloat((camera.position.x + 0.2).toFixed(2));
-						}else{
-							animation = false;
-						}
-
-						if(camera.position.z > 2){
-							camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
-						}
-					}else{
-						if(camera.position.x < posX){
-							camera.position.x = parseFloat((camera.position.x + 0.2).toFixed(2));
-						}
-
-						if(camera.position.z > 2){
-							camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
-						}else{
-							animation = false;
+				}
+				if(clickedObject.name === "Júpiter"){
+					if(camera.position.x > -0.8){
+						camera.position.x = parseFloat((camera.position.x - 0.2).toFixed(2));
+					}
+					if (camera.position.y < 0.8) {
+						camera.position.y = parseFloat((camera.position.y + 0.2).toFixed(2));
+					}
+					if(camera.position.z > 3.6){
+						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
+					}
+					else{
+						animation = false;
+					}
+					
+					for(let keys in sphere){
+						if(sphere[keys]['name'] !== "Júpiter"){
+							scene.remove(scene.getObjectByName(sphere[keys]['name']));
 						}
 					}
-
 				}
+				else if(clickedObject.name === "Saturno"){
+					if(camera.position.x < 1.4){
+						camera.position.x = parseFloat((camera.position.x + 0.2).toFixed(2));
+					}
+					else{
+						animation = false;
+					}
+					if (camera.position.y < 0.8) {
+						camera.position.y = parseFloat((camera.position.y + 0.2).toFixed(2));
+					}
+					if(camera.position.z > 3.6){
+						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
+					}
+					
+					for(let keys in sphere){
+						if(sphere[keys]['name'] !== "Saturno"){
+							scene.remove(scene.getObjectByName(sphere[keys]['name']));
+						}
+					}
+				}
+				else if(clickedObject.name === "Urano"){
+					if(camera.position.x < 4.6){
+						camera.position.x = parseFloat((camera.position.x + 0.2).toFixed(2));
+					}
+					else{
+						animation = false;
+					}
+					if (camera.position.y < 1) {
+						camera.position.y = parseFloat((camera.position.y + 0.2).toFixed(2));
+					}
+					if(camera.position.z > 3.6){
+						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
+					}
+					
+					for(let keys in sphere){
+						if(sphere[keys]['name'] !== "Urano"){
+							scene.remove(scene.getObjectByName(sphere[keys]['name']));
+						}
+					}
+				}
+				else if(clickedObject.name === "Netuno"){
+					// camera.position.x = 4.7;
+					// camera.position.y = -1.5;
+					// camera.position.z = 3;
+					if(camera.position.x < 4.6){
+						camera.position.x = parseFloat((camera.position.x + 0.2).toFixed(2));
+					}
+					else{
+						animation = false;
+					}
+					if (camera.position.y > -1.6) {
+						camera.position.y = parseFloat((camera.position.y - 0.2).toFixed(2));
+					}
+					if(camera.position.z > 3.6){
+						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
+					}
+					
+					for(let keys in sphere){
+						if(sphere[keys]['name'] !== "Netuno"){
+							scene.remove(scene.getObjectByName(sphere[keys]['name']));
+						}
+					}
+				}
+				else if(clickedObject.name === "Terra"){
+					if(camera.position.x < 2.6){
+						camera.position.x = parseFloat((camera.position.x + 0.2).toFixed(2));
+					}
+					else{
+						animation = false;
+					}
+					if (camera.position.y > -1.6) {
+						camera.position.y = parseFloat((camera.position.y - 0.2).toFixed(2));
+					}
+					if(camera.position.z > 3){
+						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
+					}
+					
+					for(let keys in sphere){
+						if(sphere[keys]['name'] !== "Terra"){
+							scene.remove(scene.getObjectByName(sphere[keys]['name']));
+						}
+					}
+				}
+				else if(clickedObject.name === "Vênus"){
+					if(camera.position.x < 0.6){
+						camera.position.x = parseFloat((camera.position.x + 0.2).toFixed(2));
+					}
+					if (camera.position.y > -1.6) {
+						camera.position.y = parseFloat((camera.position.y - 0.2).toFixed(2));
+					}
+					if(camera.position.z > 2.8){
+						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
+					}
+					else{
+						animation = false;
+					}
+					
+					for(let keys in sphere){
+						if(sphere[keys]['name'] !== "Vênus"){
+							scene.remove(scene.getObjectByName(sphere[keys]['name']));
+						}
+					}
+				}
+				else if(clickedObject.name === "Marte"){
+					if(camera.position.x > -0.8){
+						camera.position.x = parseFloat((camera.position.x - 0.2).toFixed(2));
+					}
+					if (camera.position.y > -1.6) {
+						camera.position.y = parseFloat((camera.position.y - 0.2).toFixed(2));
+					}
+					if(camera.position.z > 2.8){
+						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
+					}
+					else{
+						animation = false;
+					}
+					
+					for(let keys in sphere){
+						if(sphere[keys]['name'] !== "Marte"){
+							scene.remove(scene.getObjectByName(sphere[keys]['name']));
+						}
+					}
+				}
+				else if(clickedObject.name === "Mercúrio"){
+					if(camera.position.x > -2.6){
+						camera.position.x = parseFloat((camera.position.x - 0.2).toFixed(2));
+					}
+					if (camera.position.y > -1.6) {
+						camera.position.y = parseFloat((camera.position.y - 0.2).toFixed(2));
+					}
+					if(camera.position.z > 2.8){
+						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
+					}
+					else{
+						animation = false;
+					}
+					
+					for(let keys in sphere){
+						if(sphere[keys]['name'] !== "Mercúrio"){
+							scene.remove(scene.getObjectByName(sphere[keys]['name']));
+						}
+					}
+				}
+
 			}
 		}
 		console.log(animation);
@@ -416,7 +648,8 @@ const returningToTheOriginalCameraPositioning = () => {
 			camera.position.y = parseFloat((camera.position.y + 0.20).toFixed(2));
 		}
 		requestAnimationFrame(returningToTheOriginalCameraPositioning)
-		console.log(camera.position.x, camera.position.z);
+		console.log(camera.position.x, camera.position.y, camera.position.z);
+		// -0.6 -0.6 4.2
 	}
 }
 
@@ -473,6 +706,7 @@ window.addEventListener("click" , (ev) => {
 	const intersects = raycaster.intersectObjects( scene.children );
 	let backButton = document.querySelector(".backButton");
 	let objectName = document.querySelector(".clickPlanets");
+	let details = document.createElement('p');
     // Só cria o botão se ele ainda não existir
     if (!backButton) {
 
@@ -482,14 +716,98 @@ window.addEventListener("click" , (ev) => {
 			backButton.setAttribute("class", "backButton");
 			container.appendChild(backButton);
 
-			backButton.addEventListener("click" , () => {
-				for(let keys in simulationSphere){
-					scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
+			details.setAttribute('class' , 'details');
+			
+			const sunDetails = detailsPlanets.Sun;
+			const mercuryDetails = detailsPlanets.Mercury;
+			const venusDetails = detailsPlanets.Venus;
+			const earthDetails = detailsPlanets.Earth;
+			const marsDetails = detailsPlanets.Mars;
+			const jupiterDetails = detailsPlanets.Jupiter;
+			const saturnDetails = detailsPlanets.Saturn;
+			const uranusDetails = detailsPlanets.Uranus;
+			const neptuneDetails = detailsPlanets.Neptune;
+			// Iterar e exibir no console
+
+			if(intersects[0].object.name === "Sun"){
+				for (let key in sunDetails) {
+					details.style.color = '#ddc01b';
+					details.innerHTML += `${key}: ${sunDetails[key]}<br>`;
 				}
+				container.appendChild(details);
+			}
+
+			else if(intersects[0].object.name === "Mercúrio"){
+				for (let key in mercuryDetails) {
+					details.style.color = '#91837c';
+					details.innerHTML += `${key}: ${mercuryDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+
+			else if(intersects[0].object.name === "Vênus"){
+				for (let key in venusDetails) {
+					details.style.color = '#b0b681';
+					details.innerHTML += `${key}: ${venusDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+			
+			else if(intersects[0].object.name === "Terra"){
+				for (let key in earthDetails) {
+					details.style.color = '#126e12';
+					details.innerHTML += `${key}: ${earthDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+
+			else if(intersects[0].object.name === "Marte"){
+				for (let key in marsDetails) {
+					details.style.color = '#e96629';
+					details.innerHTML += `${key}: ${marsDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+
+			else if(intersects[0].object.name === "Júpiter"){
+				for (let key in jupiterDetails) {
+					details.style.color = '#b17424';
+					details.innerHTML += `${key}: ${jupiterDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+			
+			else if(intersects[0].object.name === "Saturno"){
+				for (let key in saturnDetails) {
+					details.style.color = '#dbbc92';
+					details.innerHTML += `${key}: ${saturnDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+			
+			else if(intersects[0].object.name === "Urano"){
+				for (let key in uranusDetails) {
+					details.style.color = '#a0e7e7';
+					details.innerHTML += `${key}: ${uranusDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+			
+			else if(intersects[0].object.name === "Netuno"){
+				for (let key in neptuneDetails) {
+					details.style.color = '#258fc0';
+					details.innerHTML += `${key}: ${neptuneDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+
+
+			backButton.addEventListener("click" , () => {
 				container.removeChild(document.querySelector(".clickPlanets"));
 				createSolarSystem(sphere);
 				objectName.innerHTML = `Clique em algum planeta ou no sol para visualizar mais detalhes`;
 				container.removeChild(backButton);
+				container.removeChild(details);
 				returningPosition();
 			})
 		}
@@ -512,6 +830,9 @@ simulationButton.addEventListener( "click" , () =>{
 		if(container.contains(document.querySelector(".backButton"))) {
 			container.removeChild(document.querySelector(".backButton"));
 			returningPosition();
+		}
+		if(container.contains(document.querySelector(".details"))) {
+			container.removeChild(document.querySelector(".details"));
 		}
 		container.removeChild(document.querySelector(".clickPlanets"));
 		for(let keys in sphere){ //tira a cena que estava antes de clicar no botão de simular sist. Solar

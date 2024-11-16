@@ -59,3 +59,16 @@ body{
 .simulationButton:hover{
     background-color: gray;
 }
+
+.details {
+    position: absolute;
+    color: white;
+    border-left: 4px solid #007acc;
+    padding: 10px 20px;
+    margin: 60px 0;
+    font-size: 1.1rem;
+    color: #91837c;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    line-height: 1.6;
+}
