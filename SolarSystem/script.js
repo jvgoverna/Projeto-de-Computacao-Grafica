@@ -347,7 +347,7 @@ const orbitPlanets = (simulationSphere) => {
 				const periodInSeconds = periodInYears * 365.25 * 24 * 60 * 60; // converte o período para segundos
 				const angularSpeed = (2 * Math.PI) / periodInSeconds; // vai calcular a velodidade angular em rad/s
 				const initialAngle = Math.atan2(planet.position.y, planet.position.x); // inicia o ângulo baseado na posição inicial dele
-				angle = initialAngle + angularSpeed * time; // atualiza o ângulo com base no tempo e na velocidade angular
+				const angle = initialAngle + angularSpeed * time; // atualiza o ângulo com base no tempo e na velocidade angular
 	
 				planet.position.x = radius * Math.cos(angle);
 				planet.position.y = radius * Math.sin(angle);
