@@ -322,37 +322,46 @@ const clearScene = () => {
     }
 };
 
+let isMoving = false;
 const orbitPlanets = (simulationSphere) => {
-	//addSunLight();
-	const time = Date.now() * 0.00000001;
+	
+	if (isMoving){
+		const time = 16684;
+		
+		const orbitalPeriods = {
+			Mercury: 1, // 0.24,
+			Venus: 2, // 0.615,
+			Earth: 3, // 1,
+			Mars: 4, // 1.88,
+			Jupiter: 6, // 11.86,
+			Saturn: 7, // 29.46,
+			Uranus: 9, // 84.02,
+			Neptune: 12, // 164.79
+		};
 
-	const orbitalPeriods = {
-        Mercury: 1, // 0.24,
-        Venus: 2, // 0.615,
-        Earth: 3, // 1,
-        Mars: 4, // 1.88,
-        Jupiter: 6, // 11.86,
-        Saturn: 7, // 29.46,
-        Uranus: 9, // 84.02,
-        Neptune: 12, // 164.79
-    };
-
-	for (let keys in simulationSphere) {
-		if (keys !== 'Sun') {
-			const planet = scene.getObjectByName(simulationSphere[keys]['name']);
-            const radius = Math.abs(simulationSphere[keys].posX); // radianos
-			const periodInYears = orbitalPeriods[keys]; // período em anos
-            const periodInSeconds = periodInYears * 365.25 * 24 * 60 * 60; // converte o período para segundos
-            const angularSpeed = (2 * Math.PI) / periodInSeconds; // vai calcular a velodidade angular em rad/s
-            const initialAngle = Math.atan2(planet.position.y, planet.position.x); // inicia o ângulo baseado na posição inicial dele
-            const angle = initialAngle + angularSpeed * time; // atualiza o ângulo com base no tempo e na velocidade angular
-
-            planet.position.x = radius * Math.cos(angle);
-            planet.position.y = radius * Math.sin(angle);
+		for (let keys in simulationSphere) {
+			if (keys !== 'Sun') {
+				const planet = scene.getObjectByName(simulationSphere[keys]['name']);
+				const radius = Math.abs(simulationSphere[keys].posX); // radianos
+				const periodInYears = orbitalPeriods[keys]; // período em anos
+				const periodInSeconds = periodInYears * 365.25 * 24 * 60 * 60; // converte o período para segundos
+				const angularSpeed = (2 * Math.PI) / periodInSeconds; // vai calcular a velodidade angular em rad/s
+				const initialAngle = Math.atan2(planet.position.y, planet.position.x); // inicia o ângulo baseado na posição inicial dele
+				angle = initialAngle + angularSpeed * time; // atualiza o ângulo com base no tempo e na velocidade angular
+	
+				planet.position.x = radius * Math.cos(angle);
+				planet.position.y = radius * Math.sin(angle);
+				console.log("position: ", planet.position.x , planet.position.y);
+			}
 		}
+	
+		renderer.render(scene, camera);
 	}
+	requestAnimationFrame(() => orbitPlanets(simulationSphere));
+}
 
-	renderer.render(scene, camera);
+const animateOrbit = () => {
+	isMoving = true;
 	requestAnimationFrame(() => orbitPlanets(simulationSphere));
 }
 
@@ -748,7 +757,7 @@ const scaleAndReturningCameraPosition = (simulationSphere) => {
 					console.log(object.position.z);
 				}else{
 					simulationAnimate = false;
-					orbitPlanets(simulationSphere);
+					animateOrbit();
 				}
 			}
 			console.log("SIMULATION ANIMATE" , simulationAnimate);
@@ -924,7 +933,7 @@ simulationButton.addEventListener( "click" , () =>{
 		simulationButtonClicked = false;
 	}
 	else if(!simulationButtonClicked){	
-		clearScene();
+		isMoving = false;
 		for(let keys in simulationSphere){
 			simulationSphere[keys]['posZ'] = 1;
 			scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
