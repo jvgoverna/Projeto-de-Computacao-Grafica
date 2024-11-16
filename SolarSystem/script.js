@@ -130,12 +130,12 @@ const animateRotation = () => {
 	requestAnimationFrame(() => rotation(sphere));
 }
 
+//const angleIncrement = 0.01;
 const rotation = (sphere) => {
-	let angle = 0.10;
 	if(spinning){
 		for(let keys in sphere){
 			const planets = sphere[keys];
-
+			const angle = angleIncrement;
 			//Rotação em Y
 			
 			planets.posZ = parseFloat( planets.posZ * Math.cos(angle) - planets.posX * Math.sin(angle) ).toFixed(2);
@@ -428,7 +428,7 @@ const clickObject = () => {
 			
 			if(clickedObject.name === name){
 				let posX = sphere[keys]["posX"];
-				console.log(camera.position.x, camera.position.y, camera.position.z);
+				console.log("BBBBBBBB", camera.position.x, camera.position.y, camera.position.z);
 				
 				if(clickedObject.name === "Sun"){
 					if(camera.position.x > -4){
@@ -628,30 +628,37 @@ const startAnimation = () => {
 
 let backAnimation = false;
 const returningToTheOriginalCameraPositioning = () => {
-	if(backAnimation){
-		console.log("CLIQUEI");
-		
-		if(camera.position.x > 0 ){
-			camera.position.x = parseFloat((camera.position.x - 0.20).toFixed(2));
-		}else if(camera.position.x < 0){
-			camera.position.x = parseFloat((camera.position.x + 0.20).toFixed(2));
-		}else{
-			backAnimation = false;
-		}
-		if (camera.position.z < 5.00){
-			camera.position.z = parseFloat((camera.position.z + 0.20).toFixed(2));
-		}
-		if (camera.position.y > 0) {
-			camera.position.y = parseFloat((camera.position.y - 0.20).toFixed(2));
-		} 
-		else if(camera.position.y < 0){
-			camera.position.y = parseFloat((camera.position.y + 0.20).toFixed(2));
-		}
-		requestAnimationFrame(returningToTheOriginalCameraPositioning)
-		console.log(camera.position.x, camera.position.y, camera.position.z);
-		// -0.6 -0.6 4.2
-	}
-}
+    if (backAnimation) {
+        console.log("Júpiter - Posição Atual:", camera.position.x, camera.position.y, camera.position.z);
+
+        // Ajuste X
+        if (camera.position.x > 0) {
+            camera.position.x = parseFloat((camera.position.x - 0.20).toFixed(2));
+        } else if (camera.position.x < 0) {
+            camera.position.x = parseFloat((camera.position.x + 0.20).toFixed(2));
+        }
+
+        // Ajuste Z
+        if (camera.position.z < 5.00) {
+            camera.position.z = parseFloat((camera.position.z + 0.20).toFixed(2));
+        }
+
+        // Ajuste Y
+        if (camera.position.y > 0) {
+            camera.position.y = parseFloat((camera.position.y - 0.20).toFixed(2));
+        } else if (camera.position.y < 0) {
+            camera.position.y = parseFloat((camera.position.y + 0.20).toFixed(2));
+        }
+
+        // Verificar se está próximo o suficiente da posição inicial
+        if (Math.abs(camera.position.x) < 0.1 && Math.abs(camera.position.y) < 0.1 && Math.abs(camera.position.z - 5.0) < 0.1) {
+            backAnimation = false;
+            camera.position.set(0, 0, 5); // Garante a posição exata
+        }
+
+        requestAnimationFrame(returningToTheOriginalCameraPositioning);
+    }
+};
 
 const returningPosition = () => {
 	backAnimation = true;
