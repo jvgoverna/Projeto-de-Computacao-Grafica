@@ -123,38 +123,32 @@ const sphere = {
 
 }
 
-// let spinning = false;
+let spinning = false;
+const animateMeteorRotation = () => {
+	spinning = true;
+	requestAnimationFrame(() => meteorRotation(sphere));
+}
 
-// const animateRotation = () => {
-// 	spinning = true;
-// 	requestAnimationFrame(() => rotation(sphere));
-// }
+const meteorRotation = (sphere) => {
+	const planetMeteor = scene.getObjectByName('meteor');
+	const angleIncrement = 0.01;
+	if(spinning){
+		const angle = angleIncrement;
+		
+		const currentX = planetMeteor.position.x;
+        const currentZ = planetMeteor.position.z;
+		const currentY = planetMeteor.position.y;
 
-// //const angleIncrement = 0.01;
-// const rotation = (sphere) => {
-// 	if(spinning){
-// 		for(let keys in sphere){
-// 			const planets = sphere[keys];
-// 			const angle = angleIncrement;
-// 			//Rotação em Y
-			
-// 			planets.posZ = parseFloat( planets.posZ * Math.cos(angle) - planets.posX * Math.sin(angle) ).toFixed(2);
-// 			planets.posX = parseFloat( planets.posZ * Math.sin(angle) + planets.posX * Math.cos(angle) ).toFixed(2);
-// 			planets.posY = planets.posY;
-			
-// 			const object = scene.getObjectByName(planets.name); //pega os objetos da cena através do nome
-			
-// 			object.position.x = planets.posX;
-// 			object.position.y = planets.posY;
-// 			object.position.z = planets.posZ;
-			
-			
-			
-// 			console.log("POSIÇÕES: ",planets.posX , planets.posY , planets.posZ);
-// 		}
-// 	}
-// 	requestAnimationFrame(() => rotation(sphere));
-// }
+        // Aplica a rotação em Y (mantendo Y fixo)
+        planetMeteor.position.x = currentX * Math.cos(angle) + currentZ * Math.sin(angle);
+        planetMeteor.position.z = currentZ * Math.cos(angle) - currentX * Math.sin(angle);
+        planetMeteor.position.y = currentY;
+		
+		console.log("POSIÇÕES: ",planetMeteor.posX , planetMeteor.posY , planetMeteor.posZ);
+	}
+	requestAnimationFrame(() => meteorRotation(sphere));
+}
+
 let isRotation = false;
 const rotationPlanets = (sphere)  => {
 	if(isRotation){
@@ -174,7 +168,23 @@ const animateRotationPlanets = () => {
 	requestAnimationFrame(() => rotationPlanets(sphere));
 }
 
-//let rotation = false;
+const createMeteor = () => {
+	let textureLoader = new THREE.TextureLoader();
+	const meteorGeometry = new THREE.SphereGeometry(0.5 , 32 , 32);
+	let texture = textureLoader.load('../Files/meteoro.jpg');
+	let meteorTexture = new THREE.MeshBasicMaterial( { map: texture } );
+	let meteor = new THREE.Mesh( meteorGeometry , meteorTexture);
+
+	meteor.position.x = 1.8;
+	meteor.position.y = -0.15;
+	meteor.position.z = -1;
+	meteor.scale.x = 0.5;
+	meteor.scale.y = 0.5;
+	meteor.name = 'meteor';
+
+	scene.add(meteor);
+}
+
 const createSolarSystem = (sphere) => {
 	const textTag = document.createElement("p");
 	textTag.setAttribute("class", "clickPlanets");
@@ -231,6 +241,8 @@ const createSolarSystem = (sphere) => {
 
 
 	animateRotationPlanets();
+	createMeteor();
+	animateMeteorRotation();
 }
 
 createSolarSystem(sphere);
@@ -543,6 +555,7 @@ const clickObject = () => {
 							scene.remove(scene.getObjectByName(sphere[keys]['name']));
 						}
 					}
+					scene.remove(scene.getObjectByName('meteor'));
 				}
 				if(clickedObject.name === "Júpiter"){
 					if(camera.position.x > -0.8){
@@ -563,6 +576,7 @@ const clickObject = () => {
 							scene.remove(scene.getObjectByName(sphere[keys]['name']));
 						}
 					}
+					scene.remove(scene.getObjectByName('meteor'));
 				}
 				else if(clickedObject.name === "Saturno"){
 					if(camera.position.x < 1.4){
@@ -583,6 +597,7 @@ const clickObject = () => {
 							scene.remove(scene.getObjectByName(sphere[keys]['name']));
 						}
 					}
+					scene.remove(scene.getObjectByName('meteor'));
 				}
 				else if(clickedObject.name === "Urano"){
 					if(camera.position.x < 4.6){
@@ -603,6 +618,7 @@ const clickObject = () => {
 							scene.remove(scene.getObjectByName(sphere[keys]['name']));
 						}
 					}
+					scene.remove(scene.getObjectByName('meteor'));
 				}
 				else if(clickedObject.name === "Netuno"){
 					// camera.position.x = 4.7;
@@ -626,6 +642,7 @@ const clickObject = () => {
 							scene.remove(scene.getObjectByName(sphere[keys]['name']));
 						}
 					}
+					scene.remove(scene.getObjectByName('meteor'));
 				}
 				else if(clickedObject.name === "Terra"){
 					if(camera.position.x < 2.6){
@@ -646,6 +663,7 @@ const clickObject = () => {
 							scene.remove(scene.getObjectByName(sphere[keys]['name']));
 						}
 					}
+					scene.remove(scene.getObjectByName('meteor'));
 				}
 				else if(clickedObject.name === "Vênus"){
 					if(camera.position.x < 0.6){
@@ -666,6 +684,7 @@ const clickObject = () => {
 							scene.remove(scene.getObjectByName(sphere[keys]['name']));
 						}
 					}
+					scene.remove(scene.getObjectByName('meteor'));
 				}
 				else if(clickedObject.name === "Marte"){
 					if(camera.position.x > -0.8){
@@ -686,6 +705,7 @@ const clickObject = () => {
 							scene.remove(scene.getObjectByName(sphere[keys]['name']));
 						}
 					}
+					scene.remove(scene.getObjectByName('meteor'));
 				}
 				else if(clickedObject.name === "Mercúrio"){
 					if(camera.position.x > -2.6){
@@ -707,7 +727,7 @@ const clickObject = () => {
 						}
 					}
 				}
-
+				scene.remove(scene.getObjectByName('meteor'));
 			}
 		}
 		console.log(animation);
@@ -763,7 +783,7 @@ const scaleAndReturningCameraPosition = (simulationSphere) => {
 	if(simulationAnimate){
 		if(!simulationButtonClicked){
 			console.log("Alternando posição para a simulacao");
-			camera.position.z = 45;
+			camera.position.z = 68;
 
 			for(let keys in simulationSphere){
 				const planets = simulationSphere[keys];				
@@ -806,7 +826,7 @@ window.addEventListener("click" , (ev) => {
 	let details = document.createElement('p');
     
 	for(let intersect of intersects){
-		if(intersects.length > 0 && intersect.object.geometry instanceof THREE.SphereGeometry){ //clique em algum objeto
+		if(intersects.length > 0 && intersect.object.geometry instanceof THREE.SphereGeometry && intersect.object.name !== 'meteor'){ //clique em algum objeto
 			objectName.innerText = `${intersects[0].object.name}`;
 			details.setAttribute('class' , 'details');
 			
@@ -958,6 +978,7 @@ simulationButton.addEventListener( "click" , () =>{
 	}
 	else if(!simulationButtonClicked){	
 		isMoving = false;
+		scene.remove(scene.getObjectByName('meteor'));
 		for(let keys in simulationSphere){
 			simulationSphere[keys]['posZ'] = 1;
 			scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
@@ -972,5 +993,8 @@ simulationButton.addEventListener( "click" , () =>{
 function animate() {
 	renderer.render( scene, camera );
 }
+
+
+
 
 //para rodar utilize npm run dev
