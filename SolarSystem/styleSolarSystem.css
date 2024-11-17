@@ -38,8 +38,8 @@ body{
     background-color: rgb(17, 86, 102);
     color: #ffff;
     position: absolute;
-    margin-top: 38%;
-    margin-left: 9.5%;
+    margin-top: 5%;
+    margin-left: 90%;
     transition: 0.3s;
 }
 .simulationButton:hover{

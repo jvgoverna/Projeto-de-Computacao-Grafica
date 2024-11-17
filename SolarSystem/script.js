@@ -16,11 +16,11 @@ const sphere = {
 	Sun : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 0xffff00} ),
-		posX : -4.25,
+		posX : -3.4,
 		posY : 1.2,
 		posZ : 1,
-		scaleX : 3.6,
-		scaleY : 3.6,
+		scaleX : 2.8,
+		scaleY : 2.8,
 		name : 'Sun',
 		texture : '../Files/sol.jpg'
 	},
@@ -28,11 +28,11 @@ const sphere = {
 	Jupiter : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'orange' } ),
-		posX : -0.85,
+		posX : -0.45,
 		posY : 1.2,
 		posZ : 1,
-		scaleX : 2.9,
-		scaleY : 2.9,
+		scaleX : 2.2,
+		scaleY : 2.2,
 		name : 'Júpiter',
 		texture : '../Files/jupiter.jpg'
 	},
@@ -40,11 +40,11 @@ const sphere = {
 	Saturn : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'yellow' } ),
-		posX : 2,
+		posX : 1.8,
 		posY : 1.2,
 		posZ : 1,
-		scaleX : 2.6,
-		scaleY : 2.6,
+		scaleX : 2,
+		scaleY : 2,
 		name : 'Saturno',
 		texture : '../Files/saturno.jpg'
 	},
@@ -52,11 +52,11 @@ const sphere = {
 	Uranus : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
-		posX : 4.65,
+		posX : 4.4,
 		posY : 1.25,
 		posZ : 1,
-		scaleX : 2.3,
-		scaleY : 2.3,
+		scaleX : 1.9,
+		scaleY : 1.9,
 		name : 'Urano',
 		texture : '../Files/uranio.jpg'
 	},
@@ -64,11 +64,11 @@ const sphere = {
 	Neptune : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
-		posX : 4.65,
+		posX : 4.55,
 		posY : -1.2,
 		posZ : 1,
-		scaleX : 1.9,
-		scaleY : 1.9,
+		scaleX : 1.7,
+		scaleY : 1.7,
 		name : 'Netuno',
 		texture : '../Files/netuno.jpg'
 	},
@@ -76,11 +76,11 @@ const sphere = {
 	Earth : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'green' } ),
-		posX : 2.55,
+		posX : 2.25,
 		posY : -1.2,
 		posZ : 1,
-		scaleX : 1.7,
-		scaleY : 1.7,
+		scaleX : 1.5,
+		scaleY : 1.5,
 		name : 'Terra',
 		texture : '../Files/terra.jpg'
 	},
@@ -88,11 +88,11 @@ const sphere = {
 	Venus : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'blue' } ),
-		posX : 0.75,
+		posX : 0.5,
 		posY : -1.2,
 		posZ : 1,
-		scaleX : 1.6,
-		scaleY : 1.6,
+		scaleX : 1.4,
+		scaleY : 1.4,
 		name : 'Vênus',
 		texture : '../Files/venus.jpg'
 	},
@@ -100,11 +100,11 @@ const sphere = {
 	Mars : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 'red' } ),
-		posX : -0.90,
+		posX : -1.1,
 		posY : -1.2,
 		posZ : 1,
-		scaleX : 1.5,
-		scaleY : 1.5,
+		scaleX : 1.3,
+		scaleY : 1.3,
 		name : 'Marte',
 		texture : '../Files/marte.jpg'
 	},
@@ -112,72 +112,67 @@ const sphere = {
 	Mercury : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
 		material : new THREE.MeshBasicMaterial( {color : 0xff0000 } ),
-		posX: -2.5,
+		posX: -2.7,
 		posY: -1.2,
 		posZ: 1,
-		scaleX: 1.4,
-		scaleY: 1.4,
+		scaleX: 1.2,
+		scaleY: 1.2,
 		name : 'Mercúrio',
 		texture : '../Files/mercurio.jpg'
 	},
 
 }
 
-let spinning = false;
+// let spinning = false;
 
-const animateRotation = () => {
-	spinning = true;
-	requestAnimationFrame(() => rotation(sphere));
-}
+// const animateRotation = () => {
+// 	spinning = true;
+// 	requestAnimationFrame(() => rotation(sphere));
+// }
 
-//const angleIncrement = 0.01;
-const rotation = (sphere) => {
-	if(spinning){
+// //const angleIncrement = 0.01;
+// const rotation = (sphere) => {
+// 	if(spinning){
+// 		for(let keys in sphere){
+// 			const planets = sphere[keys];
+// 			const angle = angleIncrement;
+// 			//Rotação em Y
+			
+// 			planets.posZ = parseFloat( planets.posZ * Math.cos(angle) - planets.posX * Math.sin(angle) ).toFixed(2);
+// 			planets.posX = parseFloat( planets.posZ * Math.sin(angle) + planets.posX * Math.cos(angle) ).toFixed(2);
+// 			planets.posY = planets.posY;
+			
+// 			const object = scene.getObjectByName(planets.name); //pega os objetos da cena através do nome
+			
+// 			object.position.x = planets.posX;
+// 			object.position.y = planets.posY;
+// 			object.position.z = planets.posZ;
+			
+			
+			
+// 			console.log("POSIÇÕES: ",planets.posX , planets.posY , planets.posZ);
+// 		}
+// 	}
+// 	requestAnimationFrame(() => rotation(sphere));
+// }
+let isRotation = false;
+const rotationPlanets = (sphere)  => {
+	if(isRotation){
 		for(let keys in sphere){
-			const planets = sphere[keys];
-			const angle = angleIncrement;
-			//Rotação em Y
-			
-			planets.posZ = parseFloat( planets.posZ * Math.cos(angle) - planets.posX * Math.sin(angle) ).toFixed(2);
-			planets.posX = parseFloat( planets.posZ * Math.sin(angle) + planets.posX * Math.cos(angle) ).toFixed(2);
-			planets.posY = planets.posY;
-			
-			const object = scene.getObjectByName(planets.name); //pega os objetos da cena através do nome
-			
-			object.position.x = planets.posX;
-			object.position.y = planets.posY;
-			object.position.z = planets.posZ;
-			
-			
-			
-			console.log("POSIÇÕES: ",planets.posX , planets.posY , planets.posZ);
+			if(sphere[keys]['name'] !== "Sun"){
+				const object = scene.getObjectByName(sphere[keys]['name']);
+				object.rotation.y += 0.01;
+	
+			}	
 		}
 	}
-	requestAnimationFrame(() => rotation(sphere));
+	requestAnimationFrame(() => rotationPlanets(sphere));
 }
 
-
-//ADICIONAR FONTE DE LUZ AO SOL
-const addSunLight = () => {
-    // Cria a luz pontual no Sol
-    const sunLight = new THREE.PointLight(0xffffcc, 1.5, 100); // Luz amarelada, intensidade 1.5, alcance 100
-    sunLight.position.set(-4.25, 1.2, 1); // Posição do Sol (coincide com sphere.Sun)
-    // sunLight.castShadow = true; // Permite sombras (opcional)
-
-    // // Configura o mapa de sombras (opcional, se sombras forem habilitadas)
-    // sunLight.shadow.mapSize.width = 1024; // Qualidade das sombras (largura)
-    // sunLight.shadow.mapSize.height = 1024; // Qualidade das sombras (altura)
-    // sunLight.shadow.camera.near = 0.1; // Proximidade da câmera de sombra
-    // sunLight.shadow.camera.far = 50; // Distância máxima da sombra
-
-    // Adiciona a luz à cena
-    scene.add(sunLight);
-
-    // Adiciona um helper visual para depuração (opcional)
-    const lightHelper = new THREE.PointLightHelper(sunLight, 1);
-    scene.add(lightHelper);
-};
-
+const animateRotationPlanets = () => {
+	isRotation = true;
+	requestAnimationFrame(() => rotationPlanets(sphere));
+}
 
 //let rotation = false;
 const createSolarSystem = (sphere) => {
@@ -189,7 +184,11 @@ const createSolarSystem = (sphere) => {
 	for( let keys in sphere ){
 		let textureLoader = new THREE.TextureLoader();
 		let texture = textureLoader.load(sphere[keys]['texture']);
-		let textureMaterial = new THREE.MeshBasicMaterial( { map: texture } );
+		let textureMaterial = new THREE.MeshPhongMaterial( {
+			map: texture,           // Aplicar a textura
+			specular: 0x000000,         // Remover o brilho especular (brilho branco)
+			shininess: 30,              // Intensidade do brilho, agora mais suave
+		});
 
 		let solarSystem = new THREE.Mesh( sphere[keys]['geometry'] ,textureMaterial );
 		solarSystem.position.x = sphere[keys]['posX'];
@@ -197,14 +196,41 @@ const createSolarSystem = (sphere) => {
 		solarSystem.position.z = sphere[keys]['posZ'];
 		solarSystem.scale.x = sphere[keys]['scaleX'];
 		solarSystem.scale.y = sphere[keys]['scaleY'];
+		solarSystem.scale.z = sphere[keys]['scaleX'];
 		solarSystem.name = sphere[keys]['name'];
 
 		
 		scene.add(solarSystem);
-		//animateRotation();
+
+
 	}
-	//ADICIONAR LUZ SOLAR
-	//addSunLight();
+		// Adicionando o plano (chão)
+	const planeGeometry = new THREE.PlaneGeometry(1000, 1000);
+	const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.5 });
+	const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+	plane.rotation.x = -Math.PI / 2; // Deixando o plano horizontal
+	plane.position.y = -2; 
+	scene.add(plane);
+
+	const ambientLight = new THREE.AmbientLight(0x404040); // Luz suave para iluminação geral
+	scene.add(ambientLight);
+
+	const directionalLight = new THREE.DirectionalLight(0xffffff, 2); // Aumentando a intensidade da luz
+	directionalLight.position.set(-4.25, 1.2, 1); // Posição da luz
+	directionalLight.castShadow = true; // Habilitando sombras para a luz direcional
+	scene.add(directionalLight);
+
+	const pointLight = new THREE.PointLight('orange', 1, 50);
+	pointLight.position.set(-2, 1, 3);
+	scene.add(pointLight);
+
+
+	// Ativar sombreamento para os objetos
+	sphere.Sun.castShadow = true; // A esfera pode projetar sombras
+	plane.receiveShadow = true; // O plano recebe sombras
+
+
+	animateRotationPlanets();
 }
 
 createSolarSystem(sphere);
@@ -313,14 +339,6 @@ const simulationSphere = {
 
 }
 
-const clearScene = () => {
-    for (let key in simulationSphere) {
-        const planet = scene.getObjectByName(simulationSphere[key].name);
-        if (planet) {
-            scene.remove(planet); // Remove o planeta da cena
-        }
-    }
-};
 
 let isMoving = false;
 const orbitPlanets = (simulationSphere) => {
@@ -381,6 +399,7 @@ const createSimulationSolarSystem = (simulationSphere) => {
 		solarSystem.position.z = simulationSphere[keys]['posZ'];
 		solarSystem.scale.x = simulationSphere[keys]['scaleX'];
 		solarSystem.scale.y = simulationSphere[keys]['scaleY'];
+		// solarSystem.scale.z = simulationSphere[keys]['scaleY'];
 		solarSystem.name = simulationSphere[keys]['name'];
 
 		scene.add( solarSystem);
@@ -786,126 +805,130 @@ window.addEventListener("click" , (ev) => {
 	let objectName = document.querySelector(".clickPlanets");
 	let details = document.createElement('p');
     
-	if(intersects.length > 0){ //clique em algum objeto
-		objectName.innerText = `${intersects[0].object.name}`;
-		details.setAttribute('class' , 'details');
-		
-		const textBack = document.createElement('p');
-		textBack.setAttribute('class' , 'textBack');
-		textBack.innerText = "Pressione ESC para voltar para o menu de detalhes do Sistema Solar";
-		container.appendChild(textBack);
-
-		container.removeChild(simulationButton);
-
-		const sunDetails = detailsPlanets.Sun;
-		const mercuryDetails = detailsPlanets.Mercury;
-		const venusDetails = detailsPlanets.Venus;
-		const earthDetails = detailsPlanets.Earth;
-		const marsDetails = detailsPlanets.Mars;
-		const jupiterDetails = detailsPlanets.Jupiter;
-		const saturnDetails = detailsPlanets.Saturn;
-		const uranusDetails = detailsPlanets.Uranus;
-		const neptuneDetails = detailsPlanets.Neptune;
-		// Iterar e exibir no console
-
-		if(intersects[0].object.name === "Sun"){
-			for (let key in sunDetails) {
-				details.style.color = '#ddc01b';
-				details.innerHTML += `${key}: ${sunDetails[key]}<br>`;
-			}
-			container.appendChild(details);
-		}
-
-		else if(intersects[0].object.name === "Mercúrio"){
-			for (let key in mercuryDetails) {
-				details.style.color = '#91837c';
-				details.innerHTML += `${key}: ${mercuryDetails[key]}<br>`;
-			}
-			container.appendChild(details);
-		}
-
-		else if(intersects[0].object.name === "Vênus"){
-			for (let key in venusDetails) {
-				details.style.color = '#b0b681';
-				details.innerHTML += `${key}: ${venusDetails[key]}<br>`;
-			}
-			container.appendChild(details);
-		}
-		
-		else if(intersects[0].object.name === "Terra"){
-			for (let key in earthDetails) {
-				details.style.color = '#126e12';
-				details.innerHTML += `${key}: ${earthDetails[key]}<br>`;
-			}
-			container.appendChild(details);
-		}
-
-		else if(intersects[0].object.name === "Marte"){
-			for (let key in marsDetails) {
-				details.style.color = '#e96629';
-				details.innerHTML += `${key}: ${marsDetails[key]}<br>`;
-			}
-			container.appendChild(details);
-		}
-
-		else if(intersects[0].object.name === "Júpiter"){
-			for (let key in jupiterDetails) {
-				details.style.color = '#b17424';
-				details.innerHTML += `${key}: ${jupiterDetails[key]}<br>`;
-			}
-			container.appendChild(details);
-		}
-		
-		else if(intersects[0].object.name === "Saturno"){
-			for (let key in saturnDetails) {
-				details.style.color = '#dbbc92';
-				details.innerHTML += `${key}: ${saturnDetails[key]}<br>`;
-			}
-			container.appendChild(details);
-		}
-		
-		else if(intersects[0].object.name === "Urano"){
-			for (let key in uranusDetails) {
-				details.style.color = '#a0e7e7';
-				details.innerHTML += `${key}: ${uranusDetails[key]}<br>`;
-			}
-			container.appendChild(details);
-		}
-		
-		else if(intersects[0].object.name === "Netuno"){
-			for (let key in neptuneDetails) {
-				details.style.color = '#258fc0';
-				details.innerHTML += `${key}: ${neptuneDetails[key]}<br>`;
-			}
-			container.appendChild(details);
-		}
-
-
-		window.addEventListener("keydown", (event) => {
-			if (event.key === "Escape") { // Detecta a tecla Esc
-
-				const objectName = document.querySelector(".clickPlanets");
-				
-				container.removeChild(textBack);
-
-				if(container.contains(objectName)){
-					container.removeChild(objectName);
+	for(let intersect of intersects){
+		if(intersects.length > 0 && intersect.object.geometry instanceof THREE.SphereGeometry){ //clique em algum objeto
+			objectName.innerText = `${intersects[0].object.name}`;
+			details.setAttribute('class' , 'details');
+			
+			const textBack = document.createElement('p');
+			textBack.setAttribute('class' , 'textBack');
+			textBack.innerText = "Pressione ESC para voltar para o menu de detalhes do Sistema Solar";
+			container.appendChild(textBack);
+	
+			container.removeChild(simulationButton);
+	
+			const sunDetails = detailsPlanets.Sun;
+			const mercuryDetails = detailsPlanets.Mercury;
+			const venusDetails = detailsPlanets.Venus;
+			const earthDetails = detailsPlanets.Earth;
+			const marsDetails = detailsPlanets.Mars;
+			const jupiterDetails = detailsPlanets.Jupiter;
+			const saturnDetails = detailsPlanets.Saturn;
+			const uranusDetails = detailsPlanets.Uranus;
+			const neptuneDetails = detailsPlanets.Neptune;
+			// Iterar e exibir no console
+	
+			if(intersects[0].object.name === "Sun"){
+				for (let key in sunDetails) {
+					details.style.color = '#ddc01b';
+					details.innerHTML += `${key}: ${sunDetails[key]}<br>`;
 				}
-				
-				container.removeChild(details);
-				
-				for (let keys in sphere) {
-					scene.remove(scene.getObjectByName(sphere[keys]['name']));
-				}
-		
-				createSolarSystem(sphere);
-
-				container.appendChild(simulationButton);
-						
-				returningPosition();
+				container.appendChild(details);
 			}
-		});
+	
+			else if(intersects[0].object.name === "Mercúrio"){
+				for (let key in mercuryDetails) {
+					details.style.color = '#91837c';
+					details.innerHTML += `${key}: ${mercuryDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+	
+			else if(intersects[0].object.name === "Vênus"){
+				for (let key in venusDetails) {
+					details.style.color = '#b0b681';
+					details.innerHTML += `${key}: ${venusDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+			
+			else if(intersects[0].object.name === "Terra"){
+				for (let key in earthDetails) {
+					details.style.color = '#126e12';
+					details.innerHTML += `${key}: ${earthDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+	
+			else if(intersects[0].object.name === "Marte"){
+				for (let key in marsDetails) {
+					details.style.color = '#e96629';
+					details.innerHTML += `${key}: ${marsDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+	
+			else if(intersects[0].object.name === "Júpiter"){
+				for (let key in jupiterDetails) {
+					details.style.color = '#b17424';
+					details.innerHTML += `${key}: ${jupiterDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+			
+			else if(intersects[0].object.name === "Saturno"){
+				for (let key in saturnDetails) {
+					details.style.color = '#dbbc92';
+					details.innerHTML += `${key}: ${saturnDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+			
+			else if(intersects[0].object.name === "Urano"){
+				for (let key in uranusDetails) {
+					details.style.color = '#a0e7e7';
+					details.innerHTML += `${key}: ${uranusDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+			
+			else if(intersects[0].object.name === "Netuno"){
+				for (let key in neptuneDetails) {
+					details.style.color = '#258fc0';
+					details.innerHTML += `${key}: ${neptuneDetails[key]}<br>`;
+				}
+				container.appendChild(details);
+			}
+	
+	
+			window.addEventListener("keydown", (event) => {
+				if (event.key === "Escape") { // Detecta a tecla Esc
+	
+					const objectName = document.querySelector(".clickPlanets");
+					
+					container.removeChild(textBack);
+	
+					if(container.contains(objectName)){
+						container.removeChild(objectName);
+					}
+					
+					container.removeChild(details);
+					
+					for (let keys in sphere) {
+						scene.remove(scene.getObjectByName(sphere[keys]['name']));
+					}
+			
+					createSolarSystem(sphere);
+	
+					container.appendChild(simulationButton);
+							
+					returningPosition();
+				}
+			});
+		}
+		
 	}
+
 
 	startAnimation();
 })
@@ -931,6 +954,7 @@ simulationButton.addEventListener( "click" , () =>{
 		createSimulationSolarSystem(simulationSphere);
 		simulationButton.innerText = "Detalhes do Sistema Solar";
 		simulationButtonClicked = false;
+		isRotation = false;
 	}
 	else if(!simulationButtonClicked){	
 		isMoving = false;
