@@ -9,9 +9,11 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setAnimationLoop( animate );
 document.body.appendChild( renderer.domElement );
 
+//pega a div container do html para adicionar o texto : Clique em algum planeta ou no sol para visualizar mais detalhes
 let container = document.querySelector(".container");
-let simulationButton = document.querySelector(".simulationButton");
+let simulationButton = document.querySelector(".simulationButton");//pega o botão de simulação do html para adicionar o evento de clique
 
+//Objeto que contém as informações para a criações do sistema solar (primitivas do Three.js)
 const sphere = {
 	Sun : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
@@ -129,9 +131,10 @@ const animateMeteorRotation = () => {
 	requestAnimationFrame(() => meteorRotation(sphere));
 }
 
+// Função para rotacionar apenas o meteoro em torno do sistema solar de acordo com as transformações geométricas de rotação
 const meteorRotation = (sphere) => {
 	const planetMeteor = scene.getObjectByName('meteor');
-	const angleIncrement = 0.01;
+	const angleIncrement = 0.01; 
 	if(spinning){
 		const angle = angleIncrement;
 		
@@ -149,6 +152,7 @@ const meteorRotation = (sphere) => {
 	requestAnimationFrame(() => meteorRotation(sphere));
 }
 
+// Função para rotacionar os planetas do sistema solar em torno do seu próprio eixo y
 let isRotation = false;
 const rotationPlanets = (sphere)  => {
 	if(isRotation){
@@ -214,7 +218,8 @@ const createSolarSystem = (sphere) => {
 
 
 	}
-		// Adicionando o plano (chão)
+	
+	// Adicionando o plano (chão)
 	const planeGeometry = new THREE.PlaneGeometry(1000, 1000);
 	const planeMaterial = new THREE.ShadowMaterial({ opacity: 0.5 });
 	const plane = new THREE.Mesh(planeGeometry, planeMaterial);
@@ -230,7 +235,7 @@ const createSolarSystem = (sphere) => {
 	directionalLight.castShadow = true; // Habilitando sombras para a luz direcional
 	scene.add(directionalLight);
 
-	const pointLight = new THREE.PointLight('orange', 1, 50);
+	const pointLight = new THREE.PointLight('orange', 1, 50); //Luz pontual para iluminar o sol
 	pointLight.position.set(-2, 1, 3);
 	scene.add(pointLight);
 
@@ -240,6 +245,7 @@ const createSolarSystem = (sphere) => {
 	plane.receiveShadow = true; // O plano recebe sombras
 
 
+	// chama as funções para animação dos planetas e do meteoro, alem de criar o meteoro
 	animateRotationPlanets();
 	createMeteor();
 	animateMeteorRotation();
@@ -247,8 +253,10 @@ const createSolarSystem = (sphere) => {
 
 createSolarSystem(sphere);
 
+// Posicionamento inicial da câmera
 camera.position.z = 5;
 
+// Objetos que contém as informações para a criação da simulação do sistema solar (primitivas do Three.js) ao clicar no botão de simular
 const simulationSphere = {
 	Sun : {
 		geometry : new THREE.SphereGeometry( 0.5, 32, 32 ),
@@ -351,7 +359,7 @@ const simulationSphere = {
 
 }
 
-
+// Função para criar a simulação de orbita dos planetas do sistema solar na simulação do sistema solar
 let isMoving = false;
 const orbitPlanets = (simulationSphere) => {
 	
@@ -370,7 +378,7 @@ const orbitPlanets = (simulationSphere) => {
 		};
 
 		for (let keys in simulationSphere) {
-			if (keys !== 'Sun') {
+			if (keys !== 'Sun') { //o sol não se orbita
 				const planet = scene.getObjectByName(simulationSphere[keys]['name']);
 				const radius = Math.abs(simulationSphere[keys].posX); // radianos
 				const periodInYears = orbitalPeriods[keys]; // período em anos
@@ -420,9 +428,11 @@ const createSimulationSolarSystem = (simulationSphere) => {
 	// orbitPlanets(simulationSphere);
 }
 
+// Raycaster para detectar o clique do mouse em objetos da cena (primitevas do Three.js)
 const raycaster = new THREE.Raycaster();
-const pointer = new THREE.Vector2();
+const pointer = new THREE.Vector2(); // Vetor para armazenar a posição do mouse
 
+// Função para calcular o movimento do ponteiro do mouse (x e y)
 const calculatePointerMovementMouse = (ev) => {
 	pointer.x = (ev.clientX / window.innerWidth) * 2 - 1; // da esquerda p/ direita (-1 a 1)
 	pointer.y = -(ev.clientY / window.innerHeight) * 2 + 1; //de cima para baixo (-1 a 1)
@@ -431,6 +441,7 @@ const calculatePointerMovementMouse = (ev) => {
 
 let animation = false;
 
+// Objeto que contém os detalhes dos planetas do sistema solar ao clicar em algum planeta ou no sol
 const detailsPlanets = {
 	Sun : {
 		name : 'Sol',
@@ -524,14 +535,16 @@ const detailsPlanets = {
 	}
 }
 
+// Função para deslocar a câmera para o planeta clicado e remover os outros planetas da cena (primitivas do Three.js)
 const clickObject = () => {
-	const intersects = raycaster.intersectObjects( scene.children );
-	if(animation && intersects.length > 0){
+	const intersects = raycaster.intersectObjects( scene.children ); //verifica se o raio do mouse intersecciona com algum objeto da cena
+	if(animation && intersects.length > 0){ //se houver interseção e a animação estiver ativa
 
 		for(let keys in sphere){
-			let name = sphere[keys]['name'];
-			const clickedObject = intersects[0].object;
+			let name = sphere[keys]['name']; //pega o nome do objeto original
+			const clickedObject = intersects[0].object; //pega o objeto clicado
 			
+			// Deslocar a câmera de acordo com o planeta clicado
 			if(clickedObject.name === name){
 				let posX = sphere[keys]["posX"];
 				console.log("BBBBBBBB", camera.position.x, camera.position.y, camera.position.z);
@@ -550,7 +563,7 @@ const clickObject = () => {
 						camera.position.z = parseFloat((camera.position.z - 0.2).toFixed(2));
 					}
 					
-					for(let keys in sphere){
+					for(let keys in sphere){ //remove os outros planetas da cena e o meteoro
 						if(sphere[keys]['name'] !== "Sun"){
 							scene.remove(scene.getObjectByName(sphere[keys]['name']));
 						}
@@ -741,6 +754,7 @@ const startAnimation = () => {
 }
 
 let backAnimation = false;
+// Função para retornar a câmera para a posição inicial ao clicar no esc do teclado
 const returningToTheOriginalCameraPositioning = () => {
     if (backAnimation) {
         console.log(camera.position.x, camera.position.y, camera.position.z);
@@ -778,29 +792,30 @@ const returningPosition = () => {
 
 let simulationAnimate = false;
 
+// Função para escalar os objetos da simulação e retornar a câmera para a posição inicial ao clicar no botão de detalhes do sistema solar
 const scaleAndReturningCameraPosition = (simulationSphere) => {
-	let factor = 1.05;
+	let factor = 1.05; //fator da escala dos objetos da simulação do sistema solar
 	if(simulationAnimate){
-		if(!simulationButtonClicked){
+		if(!simulationButtonClicked){ // se o botão de simular for clicado
 			console.log("Alternando posição para a simulacao");
 			camera.position.z = 68;
 
 			for(let keys in simulationSphere){
 				const planets = simulationSphere[keys];				
 				if(planets.posZ  < 23){
-					planets.posZ = parseFloat(planets.posZ * factor).toFixed(2);
-					const object = scene.getObjectByName(planets.name); //pega os objetos da cena através do nome
+					planets.posZ = parseFloat(planets.posZ * factor).toFixed(2); // calcula a nova posição dos objetos
+					const object = scene.getObjectByName(planets.name); // pega os objetos da cena através do nome
 
-					object.position.z = planets.posZ; //atualiza a posição do objeto
+					object.position.z = planets.posZ; // atualiza a posição do objeto
 
 					console.log(object.position.z);
 				}else{
 					simulationAnimate = false;
-					animateOrbit();
+					animateOrbit(); // chama a função para animar a órbita dos planetas da simulação do sistema solar em torno do sol
 				}
 			}
 			console.log("SIMULATION ANIMATE" , simulationAnimate);
-		}else{
+		}else{// se o botão de detalhes for clicado
 			console.log("Voltando para a posição original da camera");
 			if(camera.position.z > 5.00){
 				camera.position.z = parseFloat( (camera.position.z - 0.50).toFixed(2) );
@@ -819,23 +834,31 @@ const scaleAndReturningCamera = () => {
 	requestAnimationFrame( () => scaleAndReturningCameraPosition(simulationSphere) );
 }
 
+// Evento de clique ao clicar em algum objeto em detalhes do sistema solar (primitivas do Three.js)
 window.addEventListener("click" , (ev) => {
-	calculatePointerMovementMouse(ev);
-	const intersects = raycaster.intersectObjects( scene.children );
+	calculatePointerMovementMouse(ev); // chamada da função para calcular o movimento do ponteiro do mouse
+	const intersects = raycaster.intersectObjects( scene.children ); //verifica se o raio do mouse intersecciona com algum objeto da cena
+
+	//Quando clicar em algum objeto da cena o texto de clique em algum planeta do sistema solar é mudado para o nome do objeto clicado
 	let objectName = document.querySelector(".clickPlanets");
+	//cria um parágrafo para exibir os detalhes do objeto clicado
 	let details = document.createElement('p');
     
+	// Se houver interseção e o objeto clicado for um planeta ou o sol e não o meteoro ou outro objeto
 	for(let intersect of intersects){
 		if(intersects.length > 0 && intersect.object.geometry instanceof THREE.SphereGeometry && intersect.object.name !== 'meteor'){ //clique em algum objeto
+
+			// Exibir o nome do objeto clicado
 			objectName.innerText = `${intersects[0].object.name}`;
 			details.setAttribute('class' , 'details');
 			
+			// Exibir o texto de volta para o menu de detalhes do sistema solar
 			const textBack = document.createElement('p');
 			textBack.setAttribute('class' , 'textBack');
 			textBack.innerText = "Pressione ESC para voltar para o menu de detalhes do Sistema Solar";
 			container.appendChild(textBack);
 	
-			container.removeChild(simulationButton);
+			container.removeChild(simulationButton); // Remove o botão de simular sistema solar
 	
 			const sunDetails = detailsPlanets.Sun;
 			const mercuryDetails = detailsPlanets.Mercury;
@@ -848,6 +871,7 @@ window.addEventListener("click" , (ev) => {
 			const neptuneDetails = detailsPlanets.Neptune;
 			// Iterar e exibir no console
 	
+			// Exibir os detalhes do objeto clicado na tela
 			if(intersects[0].object.name === "Sun"){
 				for (let key in sunDetails) {
 					details.style.color = '#ddc01b';
@@ -920,29 +944,29 @@ window.addEventListener("click" , (ev) => {
 				container.appendChild(details);
 			}
 	
-	
+			// evento para voltar para o menu de detalhes do sistema solar ao clicar no esc do teclado
 			window.addEventListener("keydown", (event) => {
 				if (event.key === "Escape") { // Detecta a tecla Esc
 	
-					const objectName = document.querySelector(".clickPlanets");
+					const objectName = document.querySelector(".clickPlanets"); 
 					
-					container.removeChild(textBack);
+					container.removeChild(textBack); 
 	
-					if(container.contains(objectName)){
+					if(container.contains(objectName)){ 
 						container.removeChild(objectName);
 					}
 					
-					container.removeChild(details);
+					container.removeChild(details); 
 					
-					for (let keys in sphere) {
+					for (let keys in sphere) { // Remove todos os objetos da cena
 						scene.remove(scene.getObjectByName(sphere[keys]['name']));
 					}
 			
-					createSolarSystem(sphere);
+					createSolarSystem(sphere); // Cria os detalhes do sistema solar novamente
 	
 					container.appendChild(simulationButton);
 							
-					returningPosition();
+					returningPosition(); // Chama a função para retornar a câmera para a posição inicial 
 				}
 			});
 		}
@@ -950,10 +974,10 @@ window.addEventListener("click" , (ev) => {
 	}
 
 
-	startAnimation();
+	startAnimation(); // Chama a função para deslocar a câmera para o planeta clicado
 })
 
-window.addEventListener( "resize", () => {
+window.addEventListener( "resize", () => { //ajusta o tamanho da tela e a câmera ao redimensionar a janela do navegador
 	camera.aspect = innerWidth/innerHeight;
     camera.updateProjectionMatrix( );
     renderer.setSize( innerWidth, innerHeight );
@@ -961,40 +985,37 @@ window.addEventListener( "resize", () => {
 
 let simulationButtonClicked = true;
 
+// Evento de clique ao clicar no botão de simular sistema solar
 simulationButton.addEventListener( "click" , () =>{
-	if(simulationButtonClicked){
+	if(simulationButtonClicked){ // se o botão de simular for clicado
 
 		if(container.contains(document.querySelector(".details"))) {
 			container.removeChild(document.querySelector(".details"));
 		}
 		container.removeChild(document.querySelector(".clickPlanets"));
-		for(let keys in sphere){ //tira a cena que estava antes de clicar no botão de simular sist. Solar
+		for(let keys in sphere){ // tira a cena que estava antes de clicar no botão de simular sist. Solar
 			scene.remove(scene.getObjectByName(sphere[keys]['name']));
 		}
-		createSimulationSolarSystem(simulationSphere);
+		createSimulationSolarSystem(simulationSphere); 
 		simulationButton.innerText = "Detalhes do Sistema Solar";
 		simulationButtonClicked = false;
-		isRotation = false;
+		isRotation = false; // Para de rotacionar os planetas em torno do eixo y
 	}
-	else if(!simulationButtonClicked){	
-		isMoving = false;
-		scene.remove(scene.getObjectByName('meteor'));
+	else if(!simulationButtonClicked){ // se o botão de detalhes for clicado
+		isMoving = false; // Para de orbitar os planetas em torno do sol
+		scene.remove(scene.getObjectByName('meteor')); // Remove o meteoro da cena
 		for(let keys in simulationSphere){
-			simulationSphere[keys]['posZ'] = 1;
+			simulationSphere[keys]['posZ'] = 1; //volta a posição dos objetos para a posição inicial e remove os objetos da cena
 			scene.remove(scene.getObjectByName(simulationSphere[keys]['name']));
 		}
-		createSolarSystem(sphere);
+		createSolarSystem(sphere); // Cria os detalhes do sistema solar novamente
 		simulationButtonClicked = true;
 		simulationButton.innerText = "Simular Sistema Solar";
 	}
-	scaleAndReturningCamera();
+	scaleAndReturningCamera(); // Chama a função para escalar os objetos da simulação ao clicar no botão de simular e retorna a câmera para a posição inicial ao clicar no botão de detalhes
 })
 
 function animate() {
 	renderer.render( scene, camera );
 }
-
-
-
-
 //para rodar utilize npm run dev
